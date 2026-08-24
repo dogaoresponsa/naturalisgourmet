@@ -390,38 +390,7 @@ export const DEFAULT_STORE_SETTINGS: StoreSettings = {
   adminPin: '1234'
 };
 
-export const REVIEWS_DATA: CustomerReview[] = [
-  {
-    id: 'rev-1',
-    author: 'Mariana Souza',
-    rating: 5,
-    comment: 'O de Ninho com Nutella é simplesmente surreal de tão cremoso! Dá para ver que usam ingredientes de primeira. Chegou super congelado na bolsa térmica.',
-    favoriteFlavor: 'Ninho com Nutella Pura',
-    date: 'Há 2 dias',
-    city: 'Centro',
-    avatar: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=120&q=80'
-  },
-  {
-    id: 'rev-2',
-    author: 'Rodrigo Alves',
-    rating: 5,
-    comment: 'Pedi a caixa de 12 para o churrasco com a galera e acabou em 10 minutos! O de Maracujá Trufado e o de Pistache são nota 1000.',
-    favoriteFlavor: 'Pistache Trufado',
-    date: 'Há 5 dias',
-    city: 'Jardins',
-    avatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=120&q=80'
-  },
-  {
-    id: 'rev-3',
-    author: 'Camila Fernandes',
-    rating: 5,
-    comment: 'Atendimento via WhatsApp super rápido e educado. A mensagem sai pronta e em menos de 30 minutos o motoboy já estava buzinando aqui. Recomendo muito!',
-    favoriteFlavor: 'Morango com Ninho',
-    date: 'Semana passada',
-    city: 'Vila Nova',
-    avatar: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=120&q=80'
-  }
-];
+export const REVIEWS_DATA: CustomerReview[] = [];
 
 export const FAQ_DATA = [
   {

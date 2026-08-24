@@ -1306,7 +1306,11 @@ export default function App() {
         </section>
 
         {/* Testimonials & FAQs */}
-        <TestimonialsAndFaq />
+        <TestimonialsAndFaq
+          products={products}
+          storeSettings={storeSettings}
+          isAdminAuthenticated={isAdminAuthenticated}
+        />
       </main>
 
       {/* Footer (Customer Focused + Discreet Admin Entrance) */}

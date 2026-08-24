@@ -171,4 +171,7 @@ export interface CustomerReview {
   date: string;
   city: string;
   avatar: string;
+  avatarColor?: string;
+  isVerified?: boolean;
+  createdAt?: string;
 }
