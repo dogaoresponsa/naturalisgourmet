@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Lock, X, KeyRound, AlertCircle, ArrowRight } from 'lucide-react';
+import { NaturalisLogo } from './NaturalisLogo';
 
 interface AdminAuthModalProps {
   isOpen: boolean;
@@ -91,12 +92,12 @@ export const AdminAuthModal: React.FC<AdminAuthModalProps> = ({
 
         {/* Content */}
         <div className="p-6 flex flex-col items-center">
-          <div className="w-12 h-12 rounded-2xl bg-rose-50 border border-rose-100 flex items-center justify-center text-rose-600 mb-3 shadow-xs">
-            <KeyRound className="w-6 h-6" />
+          <div className="mb-3">
+            <NaturalisLogo size={56} className="drop-shadow-sm" />
           </div>
 
           <p className="text-xs text-stone-600 text-center mb-4 leading-relaxed font-medium">
-            Digite a senha PIN de 4 dígitos para gerenciar pedidos, cardápio, estoque e configurações.
+            Digite a senha PIN de 4 dígitos para gerenciar a <strong>Naturalis Gourmet</strong> (pedidos, cardápio, estoque e frete).
           </p>
 
           {/* PIN Input Display */}

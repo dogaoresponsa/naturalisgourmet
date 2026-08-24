@@ -1,6 +1,7 @@
 import React from 'react';
 import { Phone, MapPin, Clock, Instagram, Heart, ShieldCheck, Lock, Shield } from 'lucide-react';
 import { StoreSettings } from '../types';
+import { NaturalisLogo } from './NaturalisLogo';
 
 interface FooterProps {
   storeSettings: StoreSettings;
@@ -21,13 +22,16 @@ export const Footer: React.FC<FooterProps> = ({
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8 mb-8 pb-8 border-b border-stone-800 text-xs">
           {/* Col 1: Brand */}
           <div className="md:col-span-2 space-y-3">
-            <div className="flex items-center gap-2.5">
-              <div className="flex items-center justify-center w-9 h-9 rounded-xl bg-rose-500 text-white shadow-sm font-bold">
-                <span className="text-lg">🍦</span>
+            <div className="flex items-center gap-3">
+              <NaturalisLogo size={52} className="drop-shadow-md" />
+              <div>
+                <span className="font-extrabold text-2xl text-white tracking-tight font-serif block">
+                  {storeSettings.storeName}
+                </span>
+                <span className="text-[11px] font-semibold text-emerald-400 uppercase tracking-wider">
+                  Geladinhos Artesanais Nobres
+                </span>
               </div>
-              <span className="font-extrabold text-xl text-white tracking-tight">
-                {storeSettings.storeName}
-              </span>
             </div>
             <p className="text-stone-400 max-w-sm leading-relaxed font-normal">
               Produção artesanal diária de geladinhos e chup-chups gourmet com base nobre de Leite Ninho, Nutella pura, frutas frescas e calda caseira.

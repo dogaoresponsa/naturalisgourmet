@@ -2,6 +2,7 @@ import React from 'react';
 import { ShoppingBag, Sparkles, Clock, Phone, MapPin, Shield, Lock } from 'lucide-react';
 import { StoreSettings } from '../types';
 import { formatCurrency } from '../utils/whatsapp';
+import { NaturalisLogo } from './NaturalisLogo';
 
 interface HeaderProps {
   storeSettings: StoreSettings;
@@ -76,18 +77,18 @@ export const Header: React.FC<HeaderProps> = ({
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3.5 flex items-center justify-between gap-3">
         {/* Brand Logo & Name */}
         <div className="flex items-center gap-3">
-          <div className="relative group cursor-pointer flex items-center justify-center w-10 h-10 rounded-2xl bg-gradient-to-tr from-rose-600 to-rose-500 text-white shadow-md shadow-rose-500/20 transform group-hover:scale-105 transition-all">
-            <span className="text-lg font-black tracking-tight">G</span>
-            <div className="absolute -bottom-0.5 -right-0.5 w-3 h-3 bg-emerald-500 border-2 border-white rounded-full" title="Loja Aberta" />
+          <div className="relative group cursor-pointer shrink-0 transition-transform hover:scale-105">
+            <NaturalisLogo size={46} className="drop-shadow-sm" />
+            <div className="absolute -bottom-0.5 -right-0.5 w-3.5 h-3.5 bg-emerald-500 border-2 border-white rounded-full" title="Loja Aberta" />
           </div>
 
           <div>
             <div className="flex items-center gap-2">
-              <span className="font-extrabold text-xl sm:text-2xl text-stone-900 tracking-tight leading-none">
+              <span className="font-extrabold text-xl sm:text-2xl text-stone-900 tracking-tight leading-none font-serif">
                 {storeSettings.storeName}
               </span>
-              <span className="hidden sm:inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider bg-rose-50 text-rose-600 border border-rose-100">
-                Gourmet
+              <span className="hidden sm:inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider bg-emerald-50 text-emerald-800 border border-emerald-200">
+                Artesanal
               </span>
             </div>
             <p className="text-xs text-stone-500 hidden sm:block font-medium mt-0.5">

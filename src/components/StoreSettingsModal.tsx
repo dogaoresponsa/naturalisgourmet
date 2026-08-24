@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { X, Settings, Save, Check, Phone, DollarSign, Store, QrCode, Printer, Truck, Lock, Shield, MapPin } from 'lucide-react';
 import { StoreSettings } from '../types';
+import { NaturalisLogo } from './NaturalisLogo';
 
 interface StoreSettingsModalProps {
   isOpen: boolean;
@@ -58,14 +59,12 @@ export const StoreSettingsModal: React.FC<StoreSettingsModalProps> = ({
       >
         {/* Header */}
         <div className="p-5 bg-white text-stone-900 flex items-center justify-between border-b border-stone-100">
-          <div className="flex items-center gap-2.5">
-            <div className="p-2 rounded-xl bg-stone-100 text-stone-800">
-              <Settings className="w-5 h-5" />
-            </div>
+          <div className="flex items-center gap-3">
+            <NaturalisLogo size={42} className="drop-shadow-xs" />
             <div>
-              <h2 className="font-extrabold text-lg text-stone-900 tracking-tight">Painel de Configurações da Loja</h2>
+              <h2 className="font-extrabold text-lg text-stone-900 tracking-tight">Configurações da Loja</h2>
               <p className="text-xs text-stone-500 font-normal">
-                Altere WhatsApp de atendimento, valores de entrega, PIX e regras
+                Altere WhatsApp de atendimento, valores de entrega, PIX e dados da marca
               </p>
             </div>
           </div>

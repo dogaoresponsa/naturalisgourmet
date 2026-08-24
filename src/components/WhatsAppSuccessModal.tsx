@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { CheckCircle2, MessageCircle, Copy, Check, QrCode, ExternalLink, RotateCcw, Heart, Printer, Boxes } from 'lucide-react';
 import { StoreSettings } from '../types';
 import { formatCurrency } from '../utils/whatsapp';
+import { NaturalisLogo } from './NaturalisLogo';
 
 interface WhatsAppSuccessModalProps {
   isOpen: boolean;
@@ -52,14 +53,17 @@ export const WhatsAppSuccessModal: React.FC<WhatsAppSuccessModalProps> = ({
       >
         {/* Top Success Header */}
         <div className="p-6 bg-white text-stone-900 text-center border-b border-stone-100">
-          <div className="w-14 h-14 bg-emerald-50 rounded-2xl flex items-center justify-center mx-auto mb-3 text-emerald-600 border border-emerald-100">
-            <CheckCircle2 className="w-8 h-8 text-emerald-600" />
+          <div className="flex items-center justify-center gap-3 mb-2">
+            <NaturalisLogo size={48} className="drop-shadow-xs" />
+            <div className="w-12 h-12 bg-emerald-50 rounded-2xl flex items-center justify-center text-emerald-600 border border-emerald-100">
+              <CheckCircle2 className="w-7 h-7 text-emerald-600" />
+            </div>
           </div>
           <h2 className="font-extrabold text-2xl tracking-tight text-stone-900">
             Pedido Gerado com Sucesso!
           </h2>
           <p className="text-xs text-stone-500 mt-1 max-w-xs mx-auto font-normal">
-            Seu pedido #{orderSummary?.orderId || '0000'} está pronto para ser enviado à nossa equipe pelo WhatsApp.
+            Seu pedido na <strong>Naturalis Gourmet</strong> (#{orderSummary?.orderId || '0000'}) está pronto para ser enviado pelo WhatsApp.
           </p>
         </div>
 

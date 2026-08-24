@@ -90,7 +90,17 @@ export default function App() {
   const [storeSettings, setStoreSettings] = useState<StoreSettings>(() => {
     try {
       const saved = localStorage.getItem('geladinhos_store_settings');
-      return saved ? JSON.parse(saved) : DEFAULT_STORE_SETTINGS;
+      if (saved) {
+        const parsed = JSON.parse(saved);
+        if (parsed.storeName === 'Delícias Geladas Gourmet') {
+          parsed.storeName = 'Naturalis Gourmet';
+        }
+        if (parsed.instagramHandle === '@deliciasgeladas.gourmet') {
+          parsed.instagramHandle = '@naturalisgourmet';
+        }
+        return { ...DEFAULT_STORE_SETTINGS, ...parsed };
+      }
+      return DEFAULT_STORE_SETTINGS;
     } catch {
       return DEFAULT_STORE_SETTINGS;
     }

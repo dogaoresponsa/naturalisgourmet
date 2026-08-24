@@ -370,15 +370,15 @@ export const DEFAULT_NEIGHBORHOODS_DATA: NeighborhoodFee[] = [
 export const NEIGHBORHOODS_DATA: NeighborhoodFee[] = DEFAULT_NEIGHBORHOODS_DATA;
 
 export const DEFAULT_STORE_SETTINGS: StoreSettings = {
-  storeName: 'Delícias Geladas Gourmet',
+  storeName: 'Naturalis Gourmet',
   tagline: 'Geladinhos Artesanais feitos com Amor & Ingredientes Nobres',
   whatsappNumber: '5511999998888', // Default formatted for testing, easily editable in settings
-  instagramHandle: '@deliciasgeladas.gourmet',
+  instagramHandle: '@naturalisgourmet',
   address: 'Rua das Palmeiras, 340 - Centro',
   city: 'São Paulo - SP',
   pixKey: '11999998888',
   pixKeyType: 'Celular',
-  pixName: 'Delícias Geladas Gourmet Ltda',
+  pixName: 'Naturalis Gourmet Ltda',
   minOrderValue: 15.00,
   freeDeliveryThreshold: 70.00,
   isOpen: true,
