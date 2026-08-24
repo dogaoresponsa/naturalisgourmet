@@ -9,7 +9,7 @@ interface NaturalisLogoProps {
 
 export const NaturalisLogo: React.FC<NaturalisLogoProps> = ({
   className = '',
-  size = 48,
+  size,
   showText = true,
   variant = 'badge',
 }) => {

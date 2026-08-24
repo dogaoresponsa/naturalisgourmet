@@ -74,24 +74,29 @@ export const Header: React.FC<HeaderProps> = ({
       </div>
 
       {/* Main Header navigation */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3.5 flex items-center justify-between gap-3">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-2.5 sm:py-3.5 flex items-center justify-between gap-3 sm:gap-4">
         {/* Brand Logo & Name */}
-        <div className="flex items-center gap-3">
+        <div className="flex items-center gap-3 sm:gap-4">
           <div className="relative group cursor-pointer shrink-0 transition-transform hover:scale-105">
-            <NaturalisLogo size={46} className="drop-shadow-sm" />
-            <div className="absolute -bottom-0.5 -right-0.5 w-3.5 h-3.5 bg-emerald-500 border-2 border-white rounded-full" title="Loja Aberta" />
+            <NaturalisLogo className="w-14 h-14 sm:w-16 sm:h-16 md:w-20 md:h-20 drop-shadow-md" />
+            <div
+              className={`absolute bottom-0 right-0 w-3.5 h-3.5 sm:w-4 sm:h-4 ${
+                storeSettings.isOpen ? 'bg-emerald-500' : 'bg-rose-500'
+              } border-2 border-white rounded-full shadow-xs`}
+              title={storeSettings.isOpen ? 'Loja Aberta para Pedidos' : 'Loja Temporariamente Fechada'}
+            />
           </div>
 
           <div>
             <div className="flex items-center gap-2">
-              <span className="font-extrabold text-xl sm:text-2xl text-stone-900 tracking-tight leading-none font-serif">
+              <span className="font-extrabold text-xl sm:text-2xl md:text-3xl text-stone-900 tracking-tight leading-none font-serif">
                 {storeSettings.storeName}
               </span>
-              <span className="hidden sm:inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider bg-emerald-50 text-emerald-800 border border-emerald-200">
+              <span className="hidden sm:inline-flex items-center px-2.5 py-0.5 rounded-full text-[10px] sm:text-xs font-bold uppercase tracking-wider bg-emerald-50 text-emerald-800 border border-emerald-200 shadow-xs">
                 Artesanal
               </span>
             </div>
-            <p className="text-xs text-stone-500 hidden sm:block font-medium mt-0.5">
+            <p className="text-xs sm:text-sm text-stone-500 hidden sm:block font-medium mt-1">
               {storeSettings.tagline}
             </p>
           </div>
