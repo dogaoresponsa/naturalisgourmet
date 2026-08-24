@@ -245,29 +245,67 @@ export const StoreSettingsModal: React.FC<StoreSettingsModalProps> = ({
             </div>
           </div>
 
-          {/* Address and Hours */}
-          <div className="space-y-3">
+          {/* Address, City, Hours & Social */}
+          <div className="p-4 bg-stone-50 rounded-2xl border border-stone-200 space-y-3">
+            <div className="flex items-center gap-2 text-xs font-bold text-stone-800">
+              <MapPin className="w-4 h-4 text-rose-500" />
+              <span>Localização, Cidade & Atendimento</span>
+            </div>
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+              <div>
+                <label className="text-[11px] font-semibold text-stone-700 block mb-1">
+                  Cidade e Estado (Exibido no Cabeçalho e Rodapé)
+                </label>
+                <input
+                  type="text"
+                  value={formData.city || ''}
+                  onChange={(e) => setFormData({ ...formData, city: e.target.value })}
+                  placeholder="Ex: São Paulo - SP ou Curitiba - PR"
+                  className="w-full bg-white border border-stone-200 rounded-xl px-3.5 py-2.5 text-xs font-semibold text-stone-900 focus:outline-none focus:ring-2 focus:ring-rose-500/20 focus:border-rose-500"
+                />
+                <p className="text-[10px] text-stone-500 mt-1">
+                  Aparece no topo da loja ao lado dos horários de funcionamento.
+                </p>
+              </div>
+
+              <div>
+                <label className="text-[11px] font-semibold text-stone-700 block mb-1">
+                  Instagram da Loja (@seuinstagram)
+                </label>
+                <input
+                  type="text"
+                  value={formData.instagramHandle || ''}
+                  onChange={(e) => setFormData({ ...formData, instagramHandle: e.target.value })}
+                  placeholder="@seunome.geladinhos"
+                  className="w-full bg-white border border-stone-200 rounded-xl px-3.5 py-2.5 text-xs font-medium text-stone-900 focus:outline-none focus:ring-2 focus:ring-rose-500/20 focus:border-rose-500"
+                />
+              </div>
+            </div>
+
             <div>
-              <label className="text-xs font-semibold text-stone-700 block mb-1">
-                Endereço da Loja (Para Retiradas)
+              <label className="text-[11px] font-semibold text-stone-700 block mb-1">
+                Endereço da Loja (Para Retiradas e Balcão)
               </label>
               <input
                 type="text"
                 value={formData.address}
                 onChange={(e) => setFormData({ ...formData, address: e.target.value })}
-                className="w-full bg-white border border-stone-200 rounded-xl px-3.5 py-2.5 text-xs font-medium text-stone-900 focus:outline-none focus:ring-2 focus:ring-rose-500/20"
+                placeholder="Ex: Rua das Palmeiras, 340 - Centro"
+                className="w-full bg-white border border-stone-200 rounded-xl px-3.5 py-2.5 text-xs font-medium text-stone-900 focus:outline-none focus:ring-2 focus:ring-rose-500/20 focus:border-rose-500"
               />
             </div>
 
             <div>
-              <label className="text-xs font-semibold text-stone-700 block mb-1">
+              <label className="text-[11px] font-semibold text-stone-700 block mb-1">
                 Horário de Atendimento
               </label>
               <input
                 type="text"
                 value={formData.openingHoursText}
                 onChange={(e) => setFormData({ ...formData, openingHoursText: e.target.value })}
-                className="w-full bg-white border border-stone-200 rounded-xl px-3.5 py-2.5 text-xs font-medium text-stone-900 focus:outline-none focus:ring-2 focus:ring-rose-500/20"
+                placeholder="Ex: Segunda à Domingo: 8:00 às 20:00"
+                className="w-full bg-white border border-stone-200 rounded-xl px-3.5 py-2.5 text-xs font-medium text-stone-900 focus:outline-none focus:ring-2 focus:ring-rose-500/20 focus:border-rose-500"
               />
             </div>
           </div>

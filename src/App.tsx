@@ -1200,7 +1200,8 @@ export default function App() {
         isAdminAuthenticated={isAdminAuthenticated}
         onOpenCart={() => setIsCartOpen(true)}
         onOpenQuiz={() => setIsQuizOpen(true)}
-        onOpenAdminAuth={() => requestAdminAction('orders')}
+        onOpenSettings={() => requestAdminAction('settings')}
+        onOpenAdminAuth={() => requestAdminAction('settings')}
         onOpenAdminPanel={() => setIsOrderManagerOpen(true)}
       />
 

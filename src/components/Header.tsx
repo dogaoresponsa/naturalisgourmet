@@ -10,6 +10,7 @@ interface HeaderProps {
   isAdminAuthenticated?: boolean;
   onOpenCart: () => void;
   onOpenQuiz: () => void;
+  onOpenSettings?: () => void;
   onOpenAdminAuth?: () => void;
   onOpenAdminPanel?: () => void;
 }
@@ -21,9 +22,18 @@ export const Header: React.FC<HeaderProps> = ({
   isAdminAuthenticated = false,
   onOpenCart,
   onOpenQuiz,
+  onOpenSettings,
   onOpenAdminAuth,
   onOpenAdminPanel,
 }) => {
+  const handleLocationClick = () => {
+    if (onOpenSettings) {
+      onOpenSettings();
+    } else if (onOpenAdminAuth) {
+      onOpenAdminAuth();
+    }
+  };
+
   return (
     <header className="sticky top-0 z-40 bg-white/90 backdrop-blur-xl border-b border-stone-200/70 shadow-xs transition-all">
       {/* Top micro announcement bar */}
@@ -38,15 +48,26 @@ export const Header: React.FC<HeaderProps> = ({
             </span>
           </div>
           <div className="hidden md:flex items-center gap-4 text-stone-400 text-xs">
-            <div className="flex items-center gap-1.5">
+            <button
+              type="button"
+              onClick={handleLocationClick}
+              className="flex items-center gap-1.5 hover:text-stone-200 transition-colors cursor-pointer"
+              title="Clique para alterar horários nas Configurações"
+            >
               <Clock className="w-3.5 h-3.5 text-stone-400" />
               <span>{storeSettings.openingHoursText}</span>
-            </div>
+            </button>
             <span className="text-stone-700">•</span>
-            <div className="flex items-center gap-1.5">
-              <MapPin className="w-3.5 h-3.5 text-stone-400" />
-              <span>{storeSettings.city}</span>
-            </div>
+            <button
+              type="button"
+              onClick={handleLocationClick}
+              className="flex items-center gap-1.5 hover:text-white transition-colors cursor-pointer group"
+              title="Clique para alterar a cidade nas Configurações da Loja"
+              id="header-city-location-btn"
+            >
+              <MapPin className="w-3.5 h-3.5 text-rose-400 group-hover:scale-110 transition-transform" />
+              <span className="group-hover:underline">{storeSettings.city}</span>
+            </button>
           </div>
         </div>
       </div>
