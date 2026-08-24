@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { X, Settings, Save, Check, Phone, DollarSign, Store, QrCode, Printer, Truck, Lock, Shield } from 'lucide-react';
+import { X, Settings, Save, Check, Phone, DollarSign, Store, QrCode, Printer, Truck, Lock, Shield, MapPin } from 'lucide-react';
 import { StoreSettings } from '../types';
 
 interface StoreSettingsModalProps {
@@ -7,6 +7,7 @@ interface StoreSettingsModalProps {
   onClose: () => void;
   settings: StoreSettings;
   onSaveSettings: (newSettings: StoreSettings) => void;
+  onOpenNeighborhoods?: () => void;
   onLogoutAdmin?: () => void;
 }
 
@@ -15,6 +16,7 @@ export const StoreSettingsModal: React.FC<StoreSettingsModalProps> = ({
   onClose,
   settings,
   onSaveSettings,
+  onOpenNeighborhoods,
   onLogoutAdmin,
 }) => {
   const [formData, setFormData] = useState<StoreSettings>(settings);
@@ -171,6 +173,25 @@ export const StoreSettingsModal: React.FC<StoreSettingsModalProps> = ({
                 />
               </div>
             </div>
+
+            {onOpenNeighborhoods && (
+              <div className="pt-2 border-t border-stone-200 flex items-center justify-between gap-3">
+                <div className="text-[11px] text-stone-600">
+                  📍 <strong>Taxas por Bairro:</strong> Personalize o valor e tempo para cada bairro individualmente.
+                </div>
+                <button
+                  type="button"
+                  onClick={() => {
+                    onClose();
+                    onOpenNeighborhoods();
+                  }}
+                  className="px-3 py-1.5 bg-white hover:bg-stone-100 border border-stone-300 rounded-xl text-xs font-bold text-stone-800 flex items-center gap-1.5 cursor-pointer shadow-2xs transition-colors shrink-0"
+                >
+                  <MapPin className="w-3.5 h-3.5 text-rose-500" />
+                  <span>Gerenciar Bairros</span>
+                </button>
+              </div>
+            )}
           </div>
 
           {/* PIX Key Settings */}

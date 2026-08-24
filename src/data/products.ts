@@ -357,15 +357,17 @@ export const PROMO_COMBOS_DATA: PromoCombo[] = [
   }
 ];
 
-export const NEIGHBORHOODS_DATA: NeighborhoodFee[] = [
-  { name: 'Centro', fee: 5.00, estimatedTimeMin: 25 },
-  { name: 'Jardins / Bairro Nobre', fee: 6.00, estimatedTimeMin: 30 },
-  { name: 'Vila Nova / Zona Sul', fee: 7.00, estimatedTimeMin: 35 },
-  { name: 'Bela Vista / Planalto', fee: 6.50, estimatedTimeMin: 30 },
-  { name: 'Santa Rosa / Universitário', fee: 7.50, estimatedTimeMin: 40 },
-  { name: 'São Cristóvão / Zona Norte', fee: 8.00, estimatedTimeMin: 45 },
-  { name: 'Outro Bairro (Consultar no WhatsApp)', fee: 8.00, estimatedTimeMin: 45 }
+export const DEFAULT_NEIGHBORHOODS_DATA: NeighborhoodFee[] = [
+  { id: 'bairro-centro', name: 'Centro', fee: 5.00, estimatedTimeMin: 25, isActive: true, notes: 'Entrega rápida expressa' },
+  { id: 'bairro-jardins', name: 'Jardins / Bairro Nobre', fee: 6.00, estimatedTimeMin: 30, isActive: true },
+  { id: 'bairro-vila-nova', name: 'Vila Nova / Zona Sul', fee: 7.00, estimatedTimeMin: 35, isActive: true },
+  { id: 'bairro-bela-vista', name: 'Bela Vista / Planalto', fee: 6.50, estimatedTimeMin: 30, isActive: true },
+  { id: 'bairro-santa-rosa', name: 'Santa Rosa / Universitário', fee: 7.50, estimatedTimeMin: 40, isActive: true },
+  { id: 'bairro-sao-cristovao', name: 'São Cristóvão / Zona Norte', fee: 8.00, estimatedTimeMin: 45, isActive: true },
+  { id: 'bairro-outro', name: 'Outro Bairro (Consultar no WhatsApp)', fee: 8.00, estimatedTimeMin: 45, isActive: true, notes: 'Consulte disponibilidade pelo chat' }
 ];
+
+export const NEIGHBORHOODS_DATA: NeighborhoodFee[] = DEFAULT_NEIGHBORHOODS_DATA;
 
 export const DEFAULT_STORE_SETTINGS: StoreSettings = {
   storeName: 'Delícias Geladas Gourmet',

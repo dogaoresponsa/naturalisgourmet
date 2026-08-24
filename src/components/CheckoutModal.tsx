@@ -18,7 +18,7 @@ import {
   Calendar
 } from 'lucide-react';
 import confetti from 'canvas-confetti';
-import { CartItem, CartComboItem, CustomerDetails, StoreSettings, DeliveryType, PaymentMethod } from '../types';
+import { CartItem, CartComboItem, CustomerDetails, StoreSettings, DeliveryType, PaymentMethod, NeighborhoodFee } from '../types';
 import { NEIGHBORHOODS_DATA } from '../data/products';
 import { formatCurrency, generateWhatsAppMessage, buildWhatsAppUrl, generateShortOrderId } from '../utils/whatsapp';
 
@@ -28,6 +28,7 @@ interface CheckoutModalProps {
   items: CartItem[];
   combos: CartComboItem[];
   storeSettings: StoreSettings;
+  neighborhoods?: NeighborhoodFee[];
   onOrderCompleted: (orderSummary: any, whatsappUrl: string, rawMessage: string) => void;
 }
 
@@ -37,14 +38,21 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({
   items,
   combos,
   storeSettings,
+  neighborhoods = NEIGHBORHOODS_DATA,
   onOrderCompleted,
 }) => {
+  const activeNeighborhoods = React.useMemo(() => {
+    const list = (neighborhoods && neighborhoods.length > 0 ? neighborhoods : NEIGHBORHOODS_DATA)
+      .filter((n) => n.isActive !== false);
+    return list.length > 0 ? list : NEIGHBORHOODS_DATA;
+  }, [neighborhoods]);
+
   const [deliveryType, setDeliveryType] = useState<DeliveryType>('delivery');
   const [name, setName] = useState('');
   const [phone, setPhone] = useState('');
   const [street, setStreet] = useState('');
   const [number, setNumber] = useState('');
-  const [neighborhood, setNeighborhood] = useState(NEIGHBORHOODS_DATA[0].name);
+  const [neighborhood, setNeighborhood] = useState(() => activeNeighborhoods[0]?.name || 'Centro');
   const [complement, setComplement] = useState('');
   const [reference, setReference] = useState('');
   const [city, setCity] = useState(storeSettings.city);
@@ -60,6 +68,13 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({
   const [copiedPix, setCopiedPix] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
 
+  // Keep neighborhood selected in sync if activeNeighborhoods change
+  React.useEffect(() => {
+    if (activeNeighborhoods.length > 0 && !activeNeighborhoods.some((n) => n.name === neighborhood)) {
+      setNeighborhood(activeNeighborhoods[0].name);
+    }
+  }, [activeNeighborhoods, neighborhood]);
+
   if (!isOpen) return null;
 
   // Calculate values
@@ -70,7 +85,8 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({
   const isFreeDelivery = subtotal >= storeSettings.freeDeliveryThreshold;
 
   // Selected neighborhood fee
-  const selectedNeighborhoodObj = NEIGHBORHOODS_DATA.find((n) => n.name === neighborhood);
+  const selectedNeighborhoodObj = activeNeighborhoods.find((n) => n.name === neighborhood) ||
+    neighborhoods.find((n) => n.name === neighborhood);
   const rawDeliveryFee = deliveryType === 'delivery' ? (selectedNeighborhoodObj ? selectedNeighborhoodObj.fee : storeSettings.standardDeliveryFee) : 0;
   const deliveryFee = isFreeDelivery || deliveryType === 'retirada' ? 0 : rawDeliveryFee;
 
@@ -333,12 +349,22 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({
                     onChange={(e) => setNeighborhood(e.target.value)}
                     className="w-full bg-white border border-stone-200 rounded-xl px-3 py-2.5 text-xs text-stone-900 font-medium focus:outline-none focus:ring-2 focus:ring-rose-500/20 focus:border-rose-500 cursor-pointer"
                   >
-                    {NEIGHBORHOODS_DATA.map((n) => (
-                      <option key={n.name} value={n.name}>
-                        {n.name} ({isFreeDelivery ? 'Frete Grátis' : formatCurrency(n.fee)})
+                    {activeNeighborhoods.map((n) => (
+                      <option key={n.id || n.name} value={n.name}>
+                        {n.name} ({isFreeDelivery ? 'Frete Grátis' : n.fee === 0 ? 'Grátis' : formatCurrency(n.fee)}) • ~{n.estimatedTimeMin || 30} min
                       </option>
                     ))}
                   </select>
+                  {selectedNeighborhoodObj?.notes && (
+                    <p className="text-[11px] text-stone-500 mt-1">
+                      💡 {selectedNeighborhoodObj.notes}
+                    </p>
+                  )}
+                  {selectedNeighborhoodObj?.minOrderValue && selectedNeighborhoodObj.minOrderValue > 0 && (
+                    <p className="text-[11px] text-amber-700 mt-0.5">
+                      ⚠️ Pedido mínimo para este bairro: {formatCurrency(selectedNeighborhoodObj.minOrderValue)}
+                    </p>
+                  )}
                 </div>
 
                 {/* Complement */}

@@ -98,9 +98,13 @@ export interface CustomerDetails {
 }
 
 export interface NeighborhoodFee {
+  id?: string;
   name: string;
   fee: number;
   estimatedTimeMin: number;
+  isActive?: boolean; // Whether delivery to this neighborhood is currently available
+  minOrderValue?: number; // Optional custom min order value for this neighborhood
+  notes?: string; // Optional delivery notes e.g. "Apenas sábados e domingos"
 }
 
 export interface StoreSettings {

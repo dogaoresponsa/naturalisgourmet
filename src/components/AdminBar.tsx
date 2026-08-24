@@ -6,7 +6,8 @@ import {
   Settings, 
   Printer, 
   LogOut,
-  Sparkles
+  Sparkles,
+  MapPin
 } from 'lucide-react';
 import { StoreSettings } from '../types';
 
@@ -15,6 +16,7 @@ interface AdminBarProps {
   activeOrdersCount: number;
   onOpenOrders: () => void;
   onOpenMenu: () => void;
+  onOpenNeighborhoods: () => void;
   onOpenSettings: () => void;
   onOpenThermal: () => void;
   onLogout: () => void;
@@ -25,6 +27,7 @@ export const AdminBar: React.FC<AdminBarProps> = ({
   activeOrdersCount,
   onOpenOrders,
   onOpenMenu,
+  onOpenNeighborhoods,
   onOpenSettings,
   onOpenThermal,
   onLogout,
@@ -70,6 +73,17 @@ export const AdminBar: React.FC<AdminBarProps> = ({
           >
             <UtensilsCrossed className="w-3.5 h-3.5 text-rose-400" />
             <span>Cardápio & Estoque</span>
+          </button>
+
+          {/* Neighborhoods & Delivery Zones Button */}
+          <button
+            type="button"
+            onClick={onOpenNeighborhoods}
+            className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-stone-800 hover:bg-stone-700 text-stone-200 hover:text-white font-bold transition-all cursor-pointer border border-stone-700 active:scale-95 text-xs"
+            id="admin-bar-neighborhoods-btn"
+          >
+            <MapPin className="w-3.5 h-3.5 text-amber-400" />
+            <span>Bairros & Frete</span>
           </button>
 
           {/* Settings Button */}

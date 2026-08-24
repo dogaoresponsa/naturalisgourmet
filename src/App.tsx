@@ -59,6 +59,9 @@ import {
 import {
   AdminAuthModal
 } from './components/AdminAuthModal';
+import {
+  NeighborhoodManagerModal
+} from './components/NeighborhoodManagerModal';
 
 import { 
   GeladinhoProduct, 
@@ -67,6 +70,7 @@ import {
   CartComboItem, 
   ProductCategory, 
   CategoryItem,
+  NeighborhoodFee,
   StoreSettings,
   OrderRecord,
   OrderStatus,
@@ -77,6 +81,7 @@ import {
   PRODUCTS_DATA, 
   PROMO_COMBOS_DATA, 
   DEFAULT_CATEGORIES_DATA,
+  DEFAULT_NEIGHBORHOODS_DATA,
   DEFAULT_STORE_SETTINGS 
 } from './data/products';
 
@@ -97,6 +102,15 @@ export default function App() {
       return saved ? JSON.parse(saved) : DEFAULT_CATEGORIES_DATA;
     } catch {
       return DEFAULT_CATEGORIES_DATA;
+    }
+  });
+
+  const [neighborhoods, setNeighborhoods] = useState<NeighborhoodFee[]>(() => {
+    try {
+      const saved = localStorage.getItem('geladinhos_neighborhoods');
+      return saved ? JSON.parse(saved) : DEFAULT_NEIGHBORHOODS_DATA;
+    } catch {
+      return DEFAULT_NEIGHBORHOODS_DATA;
     }
   });
 
@@ -158,6 +172,7 @@ export default function App() {
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
   const [isQuizOpen, setIsQuizOpen] = useState(false);
   const [isMenuManagerOpen, setIsMenuManagerOpen] = useState(false);
+  const [isNeighborhoodManagerOpen, setIsNeighborhoodManagerOpen] = useState(false);
   const [isOrderManagerOpen, setIsOrderManagerOpen] = useState(false);
   const [isThermalPrintOpen, setIsThermalPrintOpen] = useState(false);
   const [selectedProductDetail, setSelectedProductDetail] = useState<GeladinhoProduct | null>(null);
@@ -172,7 +187,7 @@ export default function App() {
     }
   });
   const [isAdminAuthModalOpen, setIsAdminAuthModalOpen] = useState(false);
-  const [pendingAdminAction, setPendingAdminAction] = useState<'menu' | 'orders' | 'settings' | 'thermal' | null>(null);
+  const [pendingAdminAction, setPendingAdminAction] = useState<'menu' | 'orders' | 'settings' | 'thermal' | 'neighborhoods' | null>(null);
 
   // Orders History & Thermal Printing
   const [ordersHistory, setOrdersHistory] = useState<OrderRecord[]>(() => {
@@ -411,6 +426,10 @@ export default function App() {
   useEffect(() => {
     localStorage.setItem('geladinhos_categories', JSON.stringify(categories));
   }, [categories]);
+
+  useEffect(() => {
+    localStorage.setItem('geladinhos_neighborhoods', JSON.stringify(neighborhoods));
+  }, [neighborhoods]);
 
   // Cart calculations
   const totalCartCount = useMemo(() => {
@@ -680,6 +699,64 @@ export default function App() {
     }
   };
 
+  // Neighborhoods CRUD & Management Handlers
+  const handleSaveNeighborhood = (savedNeighborhood: NeighborhoodFee) => {
+    setNeighborhoods((prev) => {
+      const id = savedNeighborhood.id || savedNeighborhood.name;
+      const idx = prev.findIndex((n) => (n.id || n.name) === id);
+      if (idx > -1) {
+        const next = [...prev];
+        next[idx] = savedNeighborhood;
+        return next;
+      }
+      return [savedNeighborhood, ...prev];
+    });
+  };
+
+  const handleDeleteNeighborhood = (neighborhoodId: string) => {
+    setNeighborhoods((prev) => prev.filter((n) => (n.id || n.name) !== neighborhoodId));
+  };
+
+  const handleDuplicateNeighborhood = (neighborhood: NeighborhoodFee) => {
+    const cloned: NeighborhoodFee = {
+      ...neighborhood,
+      id: `bairro-${Date.now()}`,
+      name: `${neighborhood.name} (Cópia)`,
+    };
+    setNeighborhoods((prev) => [cloned, ...prev]);
+  };
+
+  const handleToggleNeighborhoodStatus = (neighborhoodId: string) => {
+    setNeighborhoods((prev) =>
+      prev.map((n) => {
+        if ((n.id || n.name) === neighborhoodId) {
+          return { ...n, isActive: n.isActive === false ? true : false };
+        }
+        return n;
+      })
+    );
+  };
+
+  const handleBulkUpdateNeighborhoodFees = (amount: number, isFixed = false) => {
+    setNeighborhoods((prev) =>
+      prev.map((n) => ({
+        ...n,
+        fee: isFixed ? Math.max(0, amount) : Math.max(0, Number((n.fee + amount).toFixed(2))),
+      }))
+    );
+  };
+
+  const handleResetNeighborhoodDefaults = () => {
+    setNeighborhoods(DEFAULT_NEIGHBORHOODS_DATA);
+    localStorage.removeItem('geladinhos_neighborhoods');
+  };
+
+  const handleImportNeighborhoods = (data: NeighborhoodFee[]) => {
+    if (Array.isArray(data) && data.length > 0) {
+      setNeighborhoods(data);
+    }
+  };
+
   const handleConfirmCustomCombo = (
     combo: PromoCombo,
     selectedFlavors: { product: GeladinhoProduct; quantity: number }[]
@@ -864,12 +941,13 @@ export default function App() {
   };
 
   // Security & Admin Action Access Guard
-  const requestAdminAction = (action: 'menu' | 'orders' | 'settings' | 'thermal') => {
+  const requestAdminAction = (action: 'menu' | 'orders' | 'settings' | 'thermal' | 'neighborhoods') => {
     if (isAdminAuthenticated) {
       if (action === 'menu') setIsMenuManagerOpen(true);
       else if (action === 'orders') setIsOrderManagerOpen(true);
       else if (action === 'settings') setIsSettingsOpen(true);
       else if (action === 'thermal') handleOpenThermalReceiptModal();
+      else if (action === 'neighborhoods') setIsNeighborhoodManagerOpen(true);
     } else {
       setPendingAdminAction(action);
       setIsAdminAuthModalOpen(true);
@@ -889,6 +967,7 @@ export default function App() {
       else if (action === 'orders') setIsOrderManagerOpen(true);
       else if (action === 'settings') setIsSettingsOpen(true);
       else if (action === 'thermal') handleOpenThermalReceiptModal();
+      else if (action === 'neighborhoods') setIsNeighborhoodManagerOpen(true);
     }
   };
 
@@ -898,6 +977,7 @@ export default function App() {
       localStorage.removeItem('geladinhos_admin_auth');
     } catch {}
     setIsMenuManagerOpen(false);
+    setIsNeighborhoodManagerOpen(false);
     setIsOrderManagerOpen(false);
     setIsSettingsOpen(false);
     setIsThermalPrintOpen(false);
@@ -1105,6 +1185,7 @@ export default function App() {
           activeOrdersCount={activeOrdersCount}
           onOpenOrders={() => setIsOrderManagerOpen(true)}
           onOpenMenu={() => setIsMenuManagerOpen(true)}
+          onOpenNeighborhoods={() => setIsNeighborhoodManagerOpen(true)}
           onOpenSettings={() => setIsSettingsOpen(true)}
           onOpenThermal={() => handleOpenThermalReceiptModal()}
           onLogout={handleAdminLogout}
@@ -1311,6 +1392,7 @@ export default function App() {
         items={cartItems}
         combos={cartCombos}
         storeSettings={storeSettings}
+        neighborhoods={neighborhoods}
         onOrderCompleted={handleOrderCompleted}
       />
 
@@ -1330,7 +1412,21 @@ export default function App() {
         onClose={() => setIsSettingsOpen(false)}
         settings={storeSettings}
         onSaveSettings={setStoreSettings}
+        onOpenNeighborhoods={() => requestAdminAction('neighborhoods')}
         onLogoutAdmin={handleAdminLogout}
+      />
+
+      <NeighborhoodManagerModal
+        isOpen={isNeighborhoodManagerOpen}
+        onClose={() => setIsNeighborhoodManagerOpen(false)}
+        neighborhoods={neighborhoods}
+        onSaveNeighborhood={handleSaveNeighborhood}
+        onDeleteNeighborhood={handleDeleteNeighborhood}
+        onDuplicateNeighborhood={handleDuplicateNeighborhood}
+        onToggleNeighborhoodStatus={handleToggleNeighborhoodStatus}
+        onBulkUpdateFees={handleBulkUpdateNeighborhoodFees}
+        onResetToDefaults={handleResetNeighborhoodDefaults}
+        onImportNeighborhoods={handleImportNeighborhoods}
       />
 
       <FlavorQuizModal
