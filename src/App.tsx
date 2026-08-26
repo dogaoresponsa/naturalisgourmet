@@ -82,11 +82,21 @@ import {
   PROMO_COMBOS_DATA, 
   DEFAULT_CATEGORIES_DATA,
   DEFAULT_NEIGHBORHOODS_DATA,
-  DEFAULT_STORE_SETTINGS 
+  DEFAULT_STORE_SETTINGS,
+  OFFICIAL_CATALOG_VERSION
 } from './data/products';
 
 export default function App() {
-  // Local storage state initialization
+  // Check if current browser storage matches official catalog version from naturalisgourmet.vercel.app
+  const isCatalogSynced = (() => {
+    try {
+      return localStorage.getItem('naturalis_catalog_version') === OFFICIAL_CATALOG_VERSION;
+    } catch {
+      return false;
+    }
+  })();
+
+  // Local storage state initialization with automatic version synchronization
   const [storeSettings, setStoreSettings] = useState<StoreSettings>(() => {
     try {
       const saved = localStorage.getItem('geladinhos_store_settings');
@@ -107,6 +117,7 @@ export default function App() {
   });
 
   const [categories, setCategories] = useState<CategoryItem[]>(() => {
+    if (!isCatalogSynced) return DEFAULT_CATEGORIES_DATA;
     try {
       const saved = localStorage.getItem('geladinhos_categories');
       return saved ? JSON.parse(saved) : DEFAULT_CATEGORIES_DATA;
@@ -116,6 +127,7 @@ export default function App() {
   });
 
   const [neighborhoods, setNeighborhoods] = useState<NeighborhoodFee[]>(() => {
+    if (!isCatalogSynced) return DEFAULT_NEIGHBORHOODS_DATA;
     try {
       const saved = localStorage.getItem('geladinhos_neighborhoods');
       return saved ? JSON.parse(saved) : DEFAULT_NEIGHBORHOODS_DATA;
@@ -125,6 +137,13 @@ export default function App() {
   });
 
   const [products, setProducts] = useState<GeladinhoProduct[]>(() => {
+    if (!isCatalogSynced) {
+      try {
+        localStorage.setItem('naturalis_catalog_version', OFFICIAL_CATALOG_VERSION);
+        localStorage.setItem('geladinhos_products', JSON.stringify(PRODUCTS_DATA));
+      } catch {}
+      return PRODUCTS_DATA;
+    }
     try {
       const saved = localStorage.getItem('geladinhos_products');
       return saved ? JSON.parse(saved) : PRODUCTS_DATA;
@@ -134,6 +153,12 @@ export default function App() {
   });
 
   const [combos, setCombos] = useState<PromoCombo[]>(() => {
+    if (!isCatalogSynced) {
+      try {
+        localStorage.setItem('geladinhos_combos', JSON.stringify(PROMO_COMBOS_DATA));
+      } catch {}
+      return PROMO_COMBOS_DATA;
+    }
     try {
       const saved = localStorage.getItem('geladinhos_combos');
       return saved ? JSON.parse(saved) : PROMO_COMBOS_DATA;
@@ -163,9 +188,9 @@ export default function App() {
   const [favorites, setFavorites] = useState<string[]>(() => {
     try {
       const saved = localStorage.getItem('geladinhos_favorites');
-      return saved ? JSON.parse(saved) : ['ninho-nutella', 'maracuja-trufado'];
+      return saved ? JSON.parse(saved) : ['sabor-1787757735535', 'sabor-1787581082471'];
     } catch {
-      return ['ninho-nutella', 'maracuja-trufado'];
+      return ['sabor-1787757735535', 'sabor-1787581082471'];
     }
   });
 
@@ -370,8 +395,8 @@ export default function App() {
     return [
       {
         id: 'mov-initial-1',
-        productId: 'ninho-nutella',
-        productName: 'Ninho com Nutella Original',
+        productId: 'sabor-1787757735535',
+        productName: 'Maracuja Cremoso',
         quantityChanged: 20,
         previousStock: 0,
         newStock: 20,
@@ -380,11 +405,11 @@ export default function App() {
       },
       {
         id: 'mov-initial-2',
-        productId: 'maracuja-trufado',
-        productName: 'Maracujá Trufado Gourmet',
-        quantityChanged: 15,
+        productId: 'sabor-1787581082471',
+        productName: 'Morango Cremoso',
+        quantityChanged: 20,
         previousStock: 0,
-        newStock: 15,
+        newStock: 20,
         reason: 'restock',
         timestamp: new Date(Date.now() - 3600000 * 20).toISOString(),
       }
@@ -692,9 +717,14 @@ export default function App() {
     setProducts(PRODUCTS_DATA);
     setCombos(PROMO_COMBOS_DATA);
     setCategories(DEFAULT_CATEGORIES_DATA);
-    localStorage.removeItem('geladinhos_products');
-    localStorage.removeItem('geladinhos_combos');
-    localStorage.removeItem('geladinhos_categories');
+    setNeighborhoods(DEFAULT_NEIGHBORHOODS_DATA);
+    try {
+      localStorage.setItem('naturalis_catalog_version', OFFICIAL_CATALOG_VERSION);
+      localStorage.setItem('geladinhos_products', JSON.stringify(PRODUCTS_DATA));
+      localStorage.setItem('geladinhos_combos', JSON.stringify(PROMO_COMBOS_DATA));
+      localStorage.setItem('geladinhos_categories', JSON.stringify(DEFAULT_CATEGORIES_DATA));
+      localStorage.setItem('geladinhos_neighborhoods', JSON.stringify(DEFAULT_NEIGHBORHOODS_DATA));
+    } catch {}
   };
 
   const handleImportCatalog = (data: { products: GeladinhoProduct[]; combos: PromoCombo[]; categories?: CategoryItem[] }) => {

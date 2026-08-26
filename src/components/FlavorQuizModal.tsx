@@ -32,19 +32,19 @@ export const FlavorQuizModal: React.FC<FlavorQuizModalProps> = ({
   const handleSelectSweetness = (s: string) => {
     setSweetness(s);
 
-    // Compute best recommendation
+    // Compute best recommendation dynamically
     let bestMatch = allProducts[0];
 
     if (craving === 'chocolate') {
-      bestMatch = allProducts.find((p) => p.id === 'ninho-nutella') || allProducts[0];
+      bestMatch = allProducts.find((p) => p.name.toLowerCase().includes('chocolate') || p.name.toLowerCase().includes('cacau')) || allProducts[0];
     } else if (craving === 'fruta') {
-      bestMatch = allProducts.find((p) => p.id === 'maracuja-trufado' || p.id === 'morango-ninho') || allProducts[1];
+      bestMatch = allProducts.find((p) => (p.flavorProfile?.fruitiness ?? 0) >= 3 || p.badges.includes('Fruta de Verdade')) || allProducts[0];
     } else if (craving === 'fit') {
-      bestMatch = allProducts.find((p) => p.id === 'fit-frutas-vermelhas' || p.id === 'fit-manga-maracuja') || allProducts[0];
+      bestMatch = allProducts.find((p) => p.category === 'fit-zero' || p.name.toLowerCase().includes('fit') || p.name.toLowerCase().includes('limão')) || allProducts[0];
     } else if (craving === 'drink') {
       bestMatch = allProducts.find((p) => p.category === 'alcoolicos') || allProducts[0];
     } else {
-      bestMatch = allProducts.find((p) => p.id === 'pistache-trufado') || allProducts[0];
+      bestMatch = allProducts.find((p) => (p.flavorProfile?.creaminess ?? 0) >= 4) || allProducts[0];
     }
 
     setRecommendation(bestMatch);

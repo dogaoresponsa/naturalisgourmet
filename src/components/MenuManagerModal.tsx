@@ -2721,16 +2721,16 @@ export const MenuManagerModal: React.FC<MenuManagerModalProps> = ({
               </div>
               <div>
                 <h3 className="font-extrabold text-stone-900 text-base">
-                  Restaurar Cardápio Padrão?
+                  Restaurar Cardápio Oficial Naturalis Gourmet?
                 </h3>
                 <p className="text-xs text-stone-500 font-medium">
-                  Voltar para os dados de fábrica originais.
+                  15 sabores padrão oficiais da Naturalis Gourmet.
                 </p>
               </div>
             </div>
 
             <p className="text-xs text-stone-600 leading-relaxed font-normal bg-amber-50 p-3.5 rounded-2xl border border-amber-200/70">
-              Esta ação redefinirá todos os sabores, preços, estoques e kits para a configuração padrão de fábrica. Todas as personalizações manuais serão substituídas.
+              Esta ação sincroniza e redefine todos os sabores, categorias, preços e kits para o cardápio oficial padrão da <strong>Naturalis Gourmet</strong> (conforme https://naturalisgourmet.vercel.app/).
             </p>
 
             <div className="flex items-center justify-end gap-2.5 pt-2 border-t border-stone-100">
@@ -2746,12 +2746,12 @@ export const MenuManagerModal: React.FC<MenuManagerModalProps> = ({
                 onClick={() => {
                   onResetToDefaults();
                   setIsResetConfirmOpen(false);
-                  showToast('Cardápio original restaurado com sucesso!');
+                  showToast('Cardápio padrão da Naturalis Gourmet restaurado!');
                 }}
                 className="px-5 py-2.5 bg-amber-600 hover:bg-amber-700 text-white rounded-xl text-xs font-bold flex items-center gap-1.5 shadow-md shadow-amber-600/20 transition-all cursor-pointer active:scale-95"
               >
                 <RotateCcw className="w-3.5 h-3.5" />
-                <span>Sim, Restaurar Cardápio</span>
+                <span>Sim, Restaurar Cardápio Padrão</span>
               </button>
             </div>
           </div>

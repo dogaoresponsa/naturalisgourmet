@@ -1,359 +1,455 @@
 import { GeladinhoProduct, PromoCombo, NeighborhoodFee, StoreSettings, CustomerReview, CategoryItem } from '../types';
 
 export const DEFAULT_CATEGORIES_DATA: CategoryItem[] = [
-  { id: 'todos', label: 'Todos os Sabores', icon: 'Sparkles', color: 'from-amber-500 to-rose-500', description: 'Todos os geladinhos do cardápio' },
-  { id: 'chocolatudos', label: 'Chocolatudos', icon: 'Cookie', color: 'from-amber-800 to-amber-950', description: 'Muitos chocolates, brigadeiros e trufas' },
-  { id: 'frutas-ninho', label: 'Frutas com Ninho', icon: 'Strawberry', color: 'from-rose-500 to-pink-500', description: 'Geleias artesanais de frutas com Leite Ninho' },
-  { id: 'premium-especiais', label: 'Linha Gourmet Premium', icon: 'Crown', color: 'from-amber-600 to-yellow-500', description: 'Ingredientes nobres como pistache, avelã e ferrero' },
-  { id: 'classicos-cremosos', label: 'Clássicos Cremosos', icon: 'Milk', color: 'from-amber-400 to-orange-400', description: 'Receitas tradicionais com cremosidade sem igual' },
-  { id: 'fit-zero', label: 'Fit & Zero Açúcar', icon: 'Leaf', color: 'from-emerald-500 to-teal-600', description: 'Sem adição de açúcar e 100% da fruta' },
-  { id: 'alcoolicos', label: 'Drinks & Alcoólicos (18+)', icon: 'Wine', color: 'from-purple-600 to-indigo-600', description: 'Receitas exclusivas de drinks para maiores de 18 anos' },
+  {
+    id: "todos",
+    label: "Todos os Sabores",
+    icon: "Sparkles",
+    color: "from-amber-500 to-rose-500",
+    description: "Todos os geladinhos do cardápio"
+  },
+  {
+    id: "classicos-cremosos",
+    label: "Clássicos Cremosos",
+    icon: "Milk",
+    color: "from-amber-400 to-orange-400",
+    description: "Receitas tradicionais com cremosidade sem igual"
+  },
+  {
+    id: "alcoolicos",
+    label: "Alcoólicos (18+)",
+    icon: "Wine",
+    color: "from-purple-600 to-indigo-600",
+    description: "Receitas exclusivas de drinks para maiores de 18 anos"
+  }
 ];
 
 export const CATEGORIES_DATA = DEFAULT_CATEGORIES_DATA;
 
 export const PRODUCTS_DATA: GeladinhoProduct[] = [
   {
-    id: 'ninho-nutella',
-    name: 'Ninho com Nutella Pura',
-    category: 'frutas-ninho',
-    tagline: 'O queridinho absoluto! Base ultra cremosa e recheio generoso.',
-    description: 'Nossa receita secreta com leite Ninho em pó integral, leite condensado Moça e uma camada farta de Nutella pura e aveludada no interior.',
-    price: 8.50,
-    originalPrice: 10.00,
-    image: 'https://images.unsplash.com/photo-1563805042-7684c019e1cb?auto=format&fit=crop&w=600&q=80',
-    badges: ['Mais Vendido', 'Nutella Pura', 'Cremoso'],
-    ingredients: ['Leite Ninho', 'Leite Condensado', 'Creme de Leite', 'Nutella Original Ferrero'],
-    allergens: ['Contém Leite', 'Contém Avelã', 'Contém Glúten', 'Contém Soja'],
+    id: "sabor-1787757735535",
+    name: "Maracuja Cremoso",
+    category: "classicos-cremosos",
+    tagline: "Leite integral, açúcar cristal, leite em pó, polpa de frutas natural, aromatizante em pó, liga neutra, emulsificante para sorvete",
+    description: "Delicioso geladinho artesanal de maracujá feito com polpa natural e base super cremosa.",
+    price: 7.5,
+    image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQN8eyfMapjBB_Bm4-YLEsXtWqTwVU5VUwnPMOBBfVgtA&s=10",
+    badges: [
+      "Novidade",
+      "Fruta de Verdade",
+      "Mais Vendido"
+    ],
+    ingredients: [
+      "Leite integral",
+      "açúcar cristal",
+      "leite em pó",
+      "polpa de frutas natural",
+      "aromatizante em pó",
+      "liga neutra",
+      "emulsificante para sorvete"
+    ],
+    allergens: [
+      "Contém Leite"
+    ],
     volumeMl: 150,
     isAvailable: true,
-    stockQuantity: 18,
+    stockQuantity: 20,
     trackStock: true,
     minStockAlert: 5,
-    rating: 4.9,
-    reviewsCount: 142,
-    flavorProfile: { sweetness: 5, creaminess: 5, fruitiness: 1 }
+    rating: 5,
+    reviewsCount: 1,
+    flavorProfile: {
+      sweetness: 4,
+      creaminess: 4,
+      fruitiness: 3
+    }
   },
   {
-    id: 'morango-ninho',
-    name: 'Morango Gourmet com Ninho',
-    category: 'frutas-ninho',
-    tagline: 'Geleia artesanal de morangos frescos com base de leite em pó.',
-    description: 'Calda artesanal rústica com pedaços de morango cozidos lentamente no açúcar orgânico, envoltos pela tradicional base aveludada de Leite Ninho.',
-    price: 8.00,
-    image: 'https://images.unsplash.com/photo-1488900128323-21503983a07e?auto=format&fit=crop&w=600&q=80',
-    badges: ['Mais Vendido', 'Fruta de Verdade'],
-    ingredients: ['Morangos Frescos', 'Leite Ninho', 'Leite Condensado Moça', 'Creme de Leite'],
-    allergens: ['Contém Leite'],
+    id: "sabor-1787757625732",
+    name: "Abacaxi Cremoso",
+    category: "classicos-cremosos",
+    tagline: "Leite integral, açúcar cristal, leite em pó, polpa de frutas natural, aromatizante em pó, liga neutra, emulsificante para sorvete",
+    description: "Sabor refrescante e aveludado de abacaxi com leite e ingredientes nobres.",
+    price: 5.5,
+    image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR9X6JPsITt40iRKw5CwNZC8Skfv2-3zyuhn-a5awlwQA&s=10",
+    badges: [
+      "Novidade",
+      "Fruta de Verdade"
+    ],
+    ingredients: [
+      "Leite integral",
+      "açúcar cristal",
+      "leite em pó",
+      "polpa de frutas natural",
+      "aromatizante em pó",
+      "liga neutra",
+      "emulsificante para sorvete"
+    ],
+    allergens: [
+      "Contém Leite"
+    ],
     volumeMl: 150,
     isAvailable: true,
-    stockQuantity: 14,
+    stockQuantity: 20,
     trackStock: true,
     minStockAlert: 5,
-    rating: 4.8,
-    reviewsCount: 98,
-    flavorProfile: { sweetness: 4, creaminess: 4, fruitiness: 5 }
+    rating: 5,
+    reviewsCount: 1,
+    flavorProfile: {
+      sweetness: 4,
+      creaminess: 4,
+      fruitiness: 3
+    }
   },
   {
-    id: 'maracuja-trufado',
-    name: 'Maracujá Trufado com Chocolate Nobre',
-    category: 'premium-especiais',
-    tagline: 'O equilíbrio perfeito entre a acidez cítrica e o chocolate meio amargo.',
-    description: 'Polpa concentrada 100% natural de maracujá da fruta, combinada com uma casquinha crocante e farta de ganache de chocolate nobre 50% cacau.',
-    price: 8.50,
-    image: 'https://images.unsplash.com/photo-1587314168485-3236d6710814?auto=format&fit=crop&w=600&q=80',
-    badges: ['Destaque Chef', 'Chocolate Nobre', 'Fruta Natural'],
-    ingredients: ['Suco Natural de Maracujá', 'Chocolate Meio Amargo Nobre', 'Leite Condensado', 'Creme de Leite'],
-    allergens: ['Contém Leite', 'Contém Derivados de Soja'],
+    id: "sabor-1787757240713",
+    name: "Açai Cremoso",
+    category: "classicos-cremosos",
+    tagline: "Leite, açúcar cristal, polpa de frutas natural, aromatizante em pó, Super Liga Neutra, emulsificante para sorvete",
+    description: "Energia e muito sabor com açaí de verdade em uma textura aveludada incomparável.",
+    price: 8,
+    image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT4R-reLnUHV6m5fTGudkyzkmT7K5hPrZNwt4ZfxeKLnA&s=10",
+    badges: [
+      "Novidade",
+      "Fruta de Verdade",
+      "Destaque Chef"
+    ],
+    ingredients: [
+      "Leite",
+      "açúcar cristal",
+      "polpa de frutas natural",
+      "aromatizante em pó",
+      "Super Liga Neutra",
+      "emulsificante para sorvete"
+    ],
+    allergens: [
+      "Contém Leite"
+    ],
     volumeMl: 150,
     isAvailable: true,
-    stockQuantity: 12,
+    stockQuantity: 20,
     trackStock: true,
     minStockAlert: 5,
-    rating: 4.9,
-    reviewsCount: 116,
-    flavorProfile: { sweetness: 3, creaminess: 4, fruitiness: 5 }
+    rating: 5,
+    reviewsCount: 1,
+    flavorProfile: {
+      sweetness: 4,
+      creaminess: 4,
+      fruitiness: 3
+    }
   },
   {
-    id: 'oreo-supremo',
-    name: 'Oreo Supremo & Baunilha',
-    category: 'chocolatudos',
-    tagline: 'Muitos pedaços de biscoito Oreo crocante em cada mordida.',
-    description: 'Creme aveludado de baunilha de Madagascar batido com leite condensado e recheado com pedaços graúdos do autêntico biscoito Oreo.',
-    price: 7.50,
-    image: 'https://images.unsplash.com/photo-1551024709-8f23befc6f87?auto=format&fit=crop&w=600&q=80',
-    badges: ['Crocante', 'Favorito da Galera'],
-    ingredients: ['Biscoito Oreo', 'Extrato Natural de Baunilha', 'Leite Condensado', 'Creme de Leite'],
-    allergens: ['Contém Glúten', 'Contém Leite', 'Contém Soja'],
+    id: "sabor-1787591886792",
+    name: "Limão Cremoso",
+    category: "classicos-cremosos",
+    tagline: "Leite integral, açúcar cristal, leite em pó, polpa de frutas natural, aromatizante em pó, liga neutra, emulsificante para sorvete",
+    description: "O equilíbrio perfeito entre o cítrico e a cremosidade do leite.",
+    price: 5,
+    image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQbPyAMzmKT4TGxGq5y_CFkYz6MKRQaLFA0p3jONemLSg&s=10",
+    badges: [
+      "Novidade",
+      "Fruta de Verdade"
+    ],
+    ingredients: [
+      "Leite integral",
+      "açúcar cristal",
+      "leite em pó",
+      "polpa de frutas natural",
+      "aromatizante em pó",
+      "liga neutra",
+      "emulsificante para sorvete"
+    ],
+    allergens: [
+      "Contém Leite"
+    ],
     volumeMl: 150,
     isAvailable: true,
-    stockQuantity: 10,
+    stockQuantity: 20,
     trackStock: true,
     minStockAlert: 5,
-    rating: 4.7,
-    reviewsCount: 74,
-    flavorProfile: { sweetness: 4, creaminess: 5, fruitiness: 1 }
+    rating: 5,
+    reviewsCount: 1,
+    flavorProfile: {
+      sweetness: 4,
+      creaminess: 5,
+      fruitiness: 3
+    }
   },
   {
-    id: 'pistache-trufado',
-    name: 'Pistache Trufado & Chocolate Branco',
-    category: 'premium-especiais',
-    tagline: 'Pasta pura de pistache importado com ganache de chocolate branco.',
-    description: 'Experiência gourmet sofisticada feita com pasta 100% pura de pistache verde, toque de flor de sal e ganache aveludada de chocolate branco belga.',
-    price: 9.50,
-    originalPrice: 12.00,
-    image: 'https://images.unsplash.com/photo-1570197788417-0e82375c9371?auto=format&fit=crop&w=600&q=80',
-    badges: ['Edição Especial', 'Pistache Puro', 'Gourmet'],
-    ingredients: ['Pasta Pura de Pistache', 'Chocolate Branco Belga', 'Leite Condensado', 'Flor de Sal'],
-    allergens: ['Contém Leite', 'Contém Pistache', 'Pode conter traços de outras castanhas'],
+    id: "sabor-1787591844589",
+    name: "Uva Cremoso",
+    category: "classicos-cremosos",
+    tagline: "Leite integral, açúcar cristal, leite em pó, polpa de frutas natural, aromatizante em pó, liga neutra, emulsificante para sorvete",
+    description: "Suco natural de uva concentrado com leite e cremosidade sem igual.",
+    price: 5,
+    image: "https://i.ytimg.com/vi/CZrEKACK17M/maxresdefault.jpg",
+    badges: [
+      "Novidade",
+      "Fruta de Verdade"
+    ],
+    ingredients: [
+      "Leite integral",
+      "açúcar cristal",
+      "leite em pó",
+      "polpa de frutas natural",
+      "aromatizante em pó",
+      "liga neutra",
+      "emulsificante para sorvete"
+    ],
+    allergens: [
+      "Contém Leite"
+    ],
     volumeMl: 150,
     isAvailable: true,
-    stockQuantity: 4,
+    stockQuantity: 20,
     trackStock: true,
     minStockAlert: 5,
-    rating: 5.0,
-    reviewsCount: 63,
-    flavorProfile: { sweetness: 3, creaminess: 5, fruitiness: 2 }
+    rating: 5,
+    reviewsCount: 1,
+    flavorProfile: {
+      sweetness: 4,
+      creaminess: 4,
+      fruitiness: 3
+    }
   },
   {
-    id: 'sensacao',
-    name: 'Sensação (Chocolate & Morango)',
-    category: 'chocolatudos',
-    tagline: 'Chocolate ao leite nobre com calda rústica de morango fresco.',
-    description: 'Inspirado no bombom clássico: base cremosa de chocolate cacau 50% intercalada com uma generosa calda caseira de morango em pedaços.',
-    price: 8.00,
-    image: 'https://images.unsplash.com/photo-1505394033641-40c6ad1178d7?auto=format&fit=crop&w=600&q=80',
-    badges: ['Clássico', 'Duplo Sabor'],
-    ingredients: ['Cacau 50%', 'Morangos Selecionados', 'Leite Condensado', 'Creme de Leite Fresco'],
-    allergens: ['Contém Leite', 'Contém Soja'],
+    id: "sabor-1787591685895",
+    name: "Tamarindo Cremoso",
+    category: "classicos-cremosos",
+    tagline: "Leite integral, açúcar cristal, leite em pó, polpa de frutas natural, aromatizante em pó, liga neutra, emulsificante para sorvete",
+    description: "Sabor exótico, refrescante e marcante de tamarindo com base cremosa artesanal.",
+    price: 5,
+    image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQOSLgUewMAVUzmGObyW8Go3FLxHAafmbHJGBT3DkkN8Q&s",
+    badges: [
+      "Novidade",
+      "Fruta de Verdade"
+    ],
+    ingredients: [
+      "Leite integral",
+      "açúcar cristal",
+      "leite em pó",
+      "polpa de frutas natural",
+      "aromatizante em pó",
+      "liga neutra",
+      "emulsificante para sorvete"
+    ],
+    allergens: [
+      "Contém Leite"
+    ],
     volumeMl: 150,
     isAvailable: true,
-    stockQuantity: 16,
+    stockQuantity: 20,
     trackStock: true,
     minStockAlert: 5,
-    rating: 4.8,
-    reviewsCount: 89,
-    flavorProfile: { sweetness: 4, creaminess: 4, fruitiness: 4 }
+    rating: 5,
+    reviewsCount: 1,
+    flavorProfile: {
+      sweetness: 4,
+      creaminess: 4,
+      fruitiness: 3
+    }
   },
   {
-    id: 'ferrero-rocher',
-    name: 'Ferrero Rocher com Avelãs Crocantes',
-    category: 'premium-especiais',
-    tagline: 'Cacau belga, pasta de avelã e pedacinhos crocantes de avelã tostada.',
-    description: 'Toda a elegância do famoso bombom italiano: creme intenso de avelãs com cacau nobre e pedaços crocantes de avelãs douradas no forno.',
-    price: 9.00,
-    image: 'https://images.unsplash.com/photo-1541781774459-bb2af2f05b55?auto=format&fit=crop&w=600&q=80',
-    badges: ['Top Premium', 'Avelãs Tostadas'],
-    ingredients: ['Avelãs Selecionadas', 'Cacau Belga 70%', 'Pasta de Avelã', 'Leite Condensado'],
-    allergens: ['Contém Avelãs', 'Contém Leite', 'Contém Soja'],
+    id: "sabor-1787591632937",
+    name: "Manga Cremoso",
+    category: "classicos-cremosos",
+    tagline: "Leite integral, açúcar cristal, leite em pó, polpa de frutas natural, aromatizante em pó, liga neutra, emulsificante para sorvete",
+    description: "Polpa pura de manga doce e suculenta em uma textura sedosa.",
+    price: 5.5,
+    image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR3DkI_z62JLLvIXEMqluGtBXSPjb90obz-zcsrUSeyag&s=10",
+    badges: [
+      "Novidade",
+      "Fruta de Verdade"
+    ],
+    ingredients: [
+      "Leite integral",
+      "açúcar cristal",
+      "leite em pó",
+      "polpa de frutas natural",
+      "aromatizante em pó",
+      "liga neutra",
+      "emulsificante para sorvete"
+    ],
+    allergens: [
+      "Contém Leite"
+    ],
     volumeMl: 150,
     isAvailable: true,
-    stockQuantity: 8,
+    stockQuantity: 20,
     trackStock: true,
     minStockAlert: 5,
-    rating: 4.9,
-    reviewsCount: 92,
-    flavorProfile: { sweetness: 4, creaminess: 5, fruitiness: 1 }
+    rating: 5,
+    reviewsCount: 1,
+    flavorProfile: {
+      sweetness: 4,
+      creaminess: 4,
+      fruitiness: 3
+    }
   },
   {
-    id: 'pacoca-cremosa',
-    name: 'Paçoca Cremosa com Doce de Leite',
-    category: 'classicos-cremosos',
-    tagline: 'A autêntica paçoca de amendoim artesanal com doce de leite caseiro.',
-    description: 'Feito com paçoca rolha selecionada triturada, creme de amendoim e uma generosa espiral de doce de leite artesanal no saquinho.',
-    price: 7.50,
-    image: 'https://images.unsplash.com/photo-1560008511-11c63416e52d?auto=format&fit=crop&w=600&q=80',
-    badges: ['Artesanal', 'Gostinho de Infância'],
-    ingredients: ['Paçoca de Amendoim', 'Doce de Leite Mineiro', 'Leite Condensado', 'Creme de Leite'],
-    allergens: ['Contém Amendoim', 'Contém Leite'],
+    id: "sabor-1787591516910",
+    name: "Goiaba Cremoso",
+    category: "classicos-cremosos",
+    tagline: "Leite integral, açúcar cristal, leite em pó, polpa de frutas natural, aromatizante em pó, liga neutra, emulsificante para sorvete",
+    description: "A clássica goiaba com textura suave e aroma irresistível.",
+    price: 5,
+    image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTvEK0kK5Eo_KqneiVAz_k-P7L6kD1upE7YFnqu10UwQA&s=10",
+    badges: [
+      "Novidade",
+      "Fruta de Verdade"
+    ],
+    ingredients: [
+      "Leite integral",
+      "açúcar cristal",
+      "leite em pó",
+      "polpa de frutas natural",
+      "aromatizante em pó",
+      "liga neutra",
+      "emulsificante para sorvete"
+    ],
+    allergens: [
+      "Contém Leite"
+    ],
     volumeMl: 150,
     isAvailable: true,
-    stockQuantity: 15,
+    stockQuantity: 20,
     trackStock: true,
     minStockAlert: 5,
-    rating: 4.8,
-    reviewsCount: 54,
-    flavorProfile: { sweetness: 5, creaminess: 5, fruitiness: 1 }
+    rating: 5,
+    reviewsCount: 1,
+    flavorProfile: {
+      sweetness: 4,
+      creaminess: 4,
+      fruitiness: 3
+    }
   },
   {
-    id: 'torta-limao',
-    name: 'Torta de Limão com Farofa Crocante',
-    category: 'classicos-cremosos',
-    tagline: 'Creme aveludado de limão taiti com farofinha crocante de biscoito.',
-    description: 'O frescor do limão taiti natural em uma base super cremosa que lembra a cobertura de torta, finalizada com farofa artesanal crocante amanteigada.',
-    price: 7.50,
-    image: 'https://images.unsplash.com/photo-1534766555764-ce878a5e3a2b?auto=format&fit=crop&w=600&q=80',
-    badges: ['Refrescante', 'Crocante'],
-    ingredients: ['Suco Natural de Limão Taiti', 'Raspas de Limão Siciliano', 'Biscoito Amanteigado', 'Leite Condensado'],
-    allergens: ['Contém Leite', 'Contém Glúten'],
+    id: "sabor-1787591421640",
+    name: "Acerola Cremoso",
+    category: "classicos-cremosos",
+    tagline: "Leite integral, açúcar cristal, leite em pó, polpa de frutas natural, aromatizante em pó, liga neutra, emulsificante para sorvete",
+    description: "Muita vitamina C e sabor marcante de acerola fresca batida com leite.",
+    price: 5,
+    image: "https://i.ytimg.com/vi/BKuGeiqzNwg/hq720.jpg?sqp=-oaymwEhCK4FEIIDSFryq4qpAxMIARUAAAAAGAElAADIQj0AgKJD&rs=AOn4CLDlSkt8nEcJrQ_BX7mkac5LCzJxpA",
+    badges: [
+      "Novidade",
+      "Fruta de Verdade"
+    ],
+    ingredients: [
+      "Leite integral",
+      "açúcar cristal",
+      "leite em pó",
+      "polpa de frutas natural",
+      "aromatizante em pó",
+      "liga neutra",
+      "emulsificante para sorvete"
+    ],
+    allergens: [
+      "Contém Leite"
+    ],
     volumeMl: 150,
     isAvailable: true,
-    stockQuantity: 3,
+    stockQuantity: 20,
     trackStock: true,
     minStockAlert: 5,
-    rating: 4.7,
-    reviewsCount: 46,
-    flavorProfile: { sweetness: 3, creaminess: 4, fruitiness: 4 }
+    rating: 5,
+    reviewsCount: 1,
+    flavorProfile: {
+      sweetness: 4,
+      creaminess: 4,
+      fruitiness: 3
+    }
   },
   {
-    id: 'churros-docedeleite',
-    name: 'Churros com Doce de Leite',
-    category: 'classicos-cremosos',
-    tagline: 'Toque perfumado de canela e recheio farto de doce de leite cremoso.',
-    description: 'Inspirado nos churros de praça: base cremosa levemente aromatizada com canela e baunilha, recheada com muito doce de leite cremoso.',
-    price: 7.50,
-    image: 'https://images.unsplash.com/photo-1624353365286-3f8d62daad51?auto=format&fit=crop&w=600&q=80',
-    badges: ['Doce Tradicional', 'Canela'],
-    ingredients: ['Doce de Leite', 'Canela do Ceilão', 'Baunilha', 'Leite Condensado', 'Creme de Leite'],
-    allergens: ['Contém Leite'],
+    id: "sabor-1787589232301",
+    name: "Caju Cremoso",
+    category: "classicos-cremosos",
+    tagline: "Leite integral, açúcar cristal, leite em pó, polpa de frutas natural, aromatizante em pó, liga neutra, emulsificante para sorvete",
+    description: "Sabor autêntico e perfumado de caju com doçura na medida certa.",
+    price: 5,
+    image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRUwzDSf97nR3rSvGlHOTmcifKnaJqK7_TrWw5yeD8thw&s=10",
+    badges: [
+      "Novidade",
+      "Fruta de Verdade"
+    ],
+    ingredients: [
+      "Leite integral",
+      "açúcar cristal",
+      "leite em pó",
+      "polpa de frutas natural",
+      "aromatizante em pó",
+      "liga neutra",
+      "emulsificante para sorvete"
+    ],
+    allergens: [
+      "Contém Leite"
+    ],
     volumeMl: 150,
     isAvailable: true,
-    stockQuantity: 11,
+    stockQuantity: 20,
     trackStock: true,
     minStockAlert: 5,
-    rating: 4.8,
-    reviewsCount: 68,
-    flavorProfile: { sweetness: 5, creaminess: 5, fruitiness: 1 }
+    rating: 5,
+    reviewsCount: 1,
+    flavorProfile: {
+      sweetness: 4,
+      creaminess: 4,
+      fruitiness: 3
+    }
   },
   {
-    id: 'fit-frutas-vermelhas',
-    name: 'Frutas Vermelhas Fit (Zero Açúcar)',
-    category: 'fit-zero',
-    tagline: 'Sem adição de açúcar e sem culpa! Adoçado com estévia e xilitol.',
-    description: 'Polpa de amora, framboesa e morango combinadas com iogurte desnatado natural e adoçante natural xilitol. Leve, saudável e muito refrescante.',
-    price: 8.50,
-    image: 'https://images.unsplash.com/photo-1464965911861-746a04b4bca6?auto=format&fit=crop&w=600&q=80',
-    badges: ['Zero Açúcar', 'Baixa Caloria', 'Fit'],
-    ingredients: ['Amoras', 'Morangos', 'Framboesas', 'Iogurte Natural', 'Xilitol Natural'],
-    allergens: ['Contém Leite'],
+    id: "sabor-1787581082471",
+    name: "Morango Cremoso",
+    category: "classicos-cremosos",
+    tagline: "Leite integral, açúcar cristal, leite em pó, polpa de frutas natural, aromatizante em pó, liga neutra, emulsificante para sorvete",
+    description: "O queridinho tradicional de morango com leite condensado e polpa de morango.",
+    price: 5.5,
+    image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTF3UN4OYu6yjrbsro7QcHFn2oxVD207PcrUqHxhOfSFQ&s=10",
+    badges: [
+      "Novidade",
+      "Fruta de Verdade"
+    ],
+    ingredients: [
+      "Leite integral",
+      "açúcar cristal",
+      "leite em pó",
+      "polpa de frutas natural",
+      "aromatizante em pó",
+      "liga neutra",
+      "emulsificante para sorvete"
+    ],
+    allergens: [
+      "Contém Leite"
+    ],
     volumeMl: 150,
     isAvailable: true,
-    stockQuantity: 6,
+    stockQuantity: 20,
     trackStock: true,
     minStockAlert: 5,
-    rating: 4.7,
-    reviewsCount: 39,
-    flavorProfile: { sweetness: 2, creaminess: 3, fruitiness: 5 }
-  },
-  {
-    id: 'fit-manga-maracuja',
-    name: 'Manga com Maracujá 100% Fruta',
-    category: 'fit-zero',
-    tagline: 'Zero lactose, sem conservantes e 100% natural da fruta.',
-    description: 'Feito puramente com manga palmer doce e suco de maracujá fresco batidos com água de coco. Sem glúten, vegano e super refrescante no calor!',
-    price: 7.00,
-    image: 'https://images.unsplash.com/photo-1553530666-ba11a7da3888?auto=format&fit=crop&w=600&q=80',
-    badges: ['100% Vegano', 'Sem Lactose', 'Sem Açúcar Adicionado'],
-    ingredients: ['Manga Palmer', 'Maracujá', 'Água de Coco Integral'],
-    allergens: ['Não contém alérgenos comuns'],
-    volumeMl: 150,
-    isAvailable: true,
-    stockQuantity: 9,
-    trackStock: true,
-    minStockAlert: 5,
-    rating: 4.9,
-    reviewsCount: 42,
-    flavorProfile: { sweetness: 3, creaminess: 2, fruitiness: 5 }
-  },
-  {
-    id: 'alcoolico-caipirinha',
-    name: 'Caipirinha de Limão Siciliano (18+)',
-    category: 'alcoolicos',
-    tagline: 'Cachaça artesanal envelhecida, limão siciliano e hortelã.',
-    description: 'O drink mais amado do Brasil em versão geladinho gourmet! Feito com cachaça artesanal de alambique, sumo de limão siciliano e toque de hortelã.',
-    price: 9.00,
-    image: 'https://images.unsplash.com/photo-1513558161293-cdaf765ed2fd?auto=format&fit=crop&w=600&q=80',
-    badges: ['Contém Álcool', 'Adultos 18+', 'Refrescante'],
-    ingredients: ['Cachaça Artesanal', 'Limão Siciliano', 'Açúcar Cristal Orgânico', 'Hortelã Fresca'],
-    allergens: ['Contém Álcool - Proibido para menores de 18 anos'],
-    volumeMl: 150,
-    isAvailable: true,
-    stockQuantity: 7,
-    trackStock: true,
-    minStockAlert: 5,
-    rating: 4.9,
-    reviewsCount: 57,
-    flavorProfile: { sweetness: 3, creaminess: 1, fruitiness: 4 }
-  },
-  {
-    id: 'alcoolico-abacaxi-vinho',
-    name: 'Espanhola (Abacaxi com Vinho Tinto 18+)',
-    category: 'alcoolicos',
-    tagline: 'Vinho tinto suave, pedaços de abacaxi e leite condensado.',
-    description: 'O famoso drink Espanhola em formato gourmet: redução especial de vinho tinto suave com pedacinhos de abacaxi caramelizado e leite condensado.',
-    price: 9.00,
-    image: 'https://images.unsplash.com/photo-1510812431401-41d2bd2722f3?auto=format&fit=crop&w=600&q=80',
-    badges: ['Contém Álcool', 'Adultos 18+', 'Cremoso'],
-    ingredients: ['Vinho Tinto Suave', 'Abacaxi Pérola', 'Leite Condensado Moça', 'Creme de Leite'],
-    allergens: ['Contém Leite', 'Contém Álcool - Proibido para menores de 18 anos'],
-    volumeMl: 150,
-    isAvailable: true,
-    stockQuantity: 5,
-    trackStock: true,
-    minStockAlert: 5,
-    rating: 4.8,
-    reviewsCount: 44,
-    flavorProfile: { sweetness: 4, creaminess: 4, fruitiness: 4 }
-  },
-  {
-    id: 'kinder-bueno',
-    name: 'Kinder Bueno White & Avelã',
-    category: 'premium-especiais',
-    tagline: 'Creme de avelã branco com pedacinhos do bombom Kinder.',
-    description: 'Recheio aveludado de creme de avelã branco crocante, envolto por base de leite ninho e pedaços generosos de wafer do chocolate Kinder.',
-    price: 9.50,
-    image: 'https://images.unsplash.com/photo-1549007994-cb92caebd54b?auto=format&fit=crop&w=600&q=80',
-    badges: ['Top Especial', 'Chocolate Branco'],
-    ingredients: ['Chocolate Kinder Bueno', 'Creme de Avelã Branco', 'Leite Ninho', 'Leite Condensado'],
-    allergens: ['Contém Leite', 'Contém Avelãs', 'Contém Glúten', 'Contém Soja'],
-    volumeMl: 150,
-    isAvailable: true,
-    stockQuantity: 12,
-    trackStock: true,
-    minStockAlert: 5,
-    rating: 4.9,
-    reviewsCount: 71,
-    flavorProfile: { sweetness: 5, creaminess: 5, fruitiness: 1 }
+    rating: 5,
+    reviewsCount: 1,
+    flavorProfile: {
+      sweetness: 4,
+      creaminess: 4,
+      fruitiness: 3
+    }
   }
 ];
 
 export const PROMO_COMBOS_DATA: PromoCombo[] = [
   {
-    id: 'combo-degustacao-6',
-    title: 'Kit Degustação (6 Unidades)',
-    subtitle: 'Escolha 6 sabores variados com desconto especial!',
-    description: 'Perfeito para experimentar os melhores sabores da casa ou dividir com a família. Economize R$ 6,00!',
-    itemsCount: 6,
-    price: 45.00,
-    originalPrice: 51.00,
-    image: 'https://images.unsplash.com/photo-1501443762994-82bd5dace89a?auto=format&fit=crop&w=600&q=80',
-    badge: 'Mais Vendido ⭐',
-    isCustomizable: true
-  },
-  {
-    id: 'combo-festa-12-isopor',
-    title: 'Caixa Festa (12 Unid + Caixa Térmica)',
-    subtitle: '12 geladinhos gourmet + Isopor reutilizável para manter congelado',
-    description: 'Acompanha caixa térmica de isopor com gelo reutilizável para transporte de até 4 horas sem derreter. Ideal para churrascos, festas e presentes.',
-    itemsCount: 12,
-    price: 89.90,
-    originalPrice: 110.00,
-    image: 'https://images.unsplash.com/photo-1563805042-7684c019e1cb?auto=format&fit=crop&w=600&q=80',
-    badge: 'Super Oferta 🔥',
+    id: "combo-1787592027401",
+    title: "Kit Promocional Especial ",
+    subtitle: "Escolha seus sabores favoritos",
+    description: "Kit econômico com unidades selecionadas e embalagem térmica protetora.",
+    itemsCount: 4,
+    price: 16,
+    originalPrice: 20,
+    image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTVxZoQuTZBfjk0XS5wO8efwEgNaq1xgXUF1qCc2SblNQ&s=10",
+    badge: "Super Promoção",
     includesThermalBag: true,
     isCustomizable: true
-  },
-  {
-    id: 'combo-dupla-chocolatudos',
-    title: 'Kit Casal Chocolover (4 Unidades)',
-    subtitle: '4 unidades dos sabores mais chocolatudos e trufados',
-    description: 'Inclui 1 Ninho com Nutella, 1 Maracujá Trufado, 1 Oreo Supremo e 1 Sensação.',
-    itemsCount: 4,
-    price: 29.90,
-    originalPrice: 33.00,
-    image: 'https://images.unsplash.com/photo-1587314168485-3236d6710814?auto=format&fit=crop&w=600&q=80',
-    badge: 'Economia Rápida',
-    includedFlavorIds: ['ninho-nutella', 'maracuja-trufado', 'oreo-supremo', 'sensacao']
   }
 ];
 
@@ -369,10 +465,12 @@ export const DEFAULT_NEIGHBORHOODS_DATA: NeighborhoodFee[] = [
 
 export const NEIGHBORHOODS_DATA: NeighborhoodFee[] = DEFAULT_NEIGHBORHOODS_DATA;
 
+export const OFFICIAL_CATALOG_VERSION = 'naturalis_gourmet_v5_cremosos_user_default';
+
 export const DEFAULT_STORE_SETTINGS: StoreSettings = {
   storeName: 'Naturalis Gourmet',
   tagline: 'Geladinhos Artesanais feitos com Amor & Ingredientes Nobres',
-  whatsappNumber: '5511999998888', // Default formatted for testing, easily editable in settings
+  whatsappNumber: '5511999998888',
   instagramHandle: '@naturalisgourmet',
   address: 'Rua das Palmeiras, 340 - Centro',
   city: 'São Paulo - SP',
@@ -399,7 +497,7 @@ export const FAQ_DATA = [
   },
   {
     question: 'Vocês fazem encomendas para festas e aniversários?',
-    answer: 'Sim! Atendemos aniversários, casamentos, eventos corporativos e formaturas com caixas personalizadas e preços especiais no atacado (a partir de 30 unidades). Fale conosco pelo WhatsApp!'
+    answer: 'Sim! Atendemos aniversários, casamentos, eventos corporativos e formaturas com caixas personalizadas e preços especiais no atacado. Fale conosco pelo WhatsApp!'
   },
   {
     question: 'Qual é a durabilidade e como conservar?',
