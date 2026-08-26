@@ -36,10 +36,12 @@ interface NeighborhoodManagerModalProps {
   onSaveNeighborhood: (neighborhood: NeighborhoodFee) => void;
   onDeleteNeighborhood: (neighborhoodId: string) => void;
   onDuplicateNeighborhood: (neighborhood: NeighborhoodFee) => void;
-  onToggleStatus: (neighborhoodId: string) => void;
+  onToggleNeighborhoodStatus?: (neighborhoodId: string) => void;
+  onToggleStatus?: (neighborhoodId: string) => void;
+  onQuickUpdateFee?: (neighborhoodId: string, newFee: number) => void;
   onBulkUpdateFees: (amount: number, isFixed?: boolean) => void;
   onResetToDefaults: () => void;
-  onImportNeighborhoods: (data: NeighborhoodFee[]) => void;
+  onImportNeighborhoods?: (data: NeighborhoodFee[]) => void;
 }
 
 export const NeighborhoodManagerModal: React.FC<NeighborhoodManagerModalProps> = ({
@@ -49,7 +51,9 @@ export const NeighborhoodManagerModal: React.FC<NeighborhoodManagerModalProps> =
   onSaveNeighborhood,
   onDeleteNeighborhood,
   onDuplicateNeighborhood,
+  onToggleNeighborhoodStatus,
   onToggleStatus,
+  onQuickUpdateFee,
   onBulkUpdateFees,
   onResetToDefaults,
   onImportNeighborhoods,
@@ -61,6 +65,12 @@ export const NeighborhoodManagerModal: React.FC<NeighborhoodManagerModalProps> =
   // Edit / Create State
   const [editingNeighborhood, setEditingNeighborhood] = useState<NeighborhoodFee | null>(null);
   const [isNewNeighborhood, setIsNewNeighborhood] = useState(false);
+  const [formName, setFormName] = useState('');
+  const [formFee, setFormFee] = useState('6.00');
+  const [formTime, setFormTime] = useState('30');
+  const [formMinOrder, setFormMinOrder] = useState('');
+  const [formNotes, setFormNotes] = useState('');
+  const [formIsActive, setFormIsActive] = useState(true);
 
   // Bulk Adjustments State
   const [isBulkModalOpen, setIsBulkModalOpen] = useState(false);
@@ -82,6 +92,24 @@ export const NeighborhoodManagerModal: React.FC<NeighborhoodManagerModalProps> =
   const showToast = (msg: string) => {
     setToastMessage(msg);
     setTimeout(() => setToastMessage(null), 3000);
+  };
+
+  const handleToggle = (id: string) => {
+    if (onToggleNeighborhoodStatus) {
+      onToggleNeighborhoodStatus(id);
+    } else if (onToggleStatus) {
+      onToggleStatus(id);
+    }
+  };
+
+  const handleQuickStepFee = (n: NeighborhoodFee, delta: number) => {
+    const newFee = Math.max(0, Number((n.fee + delta).toFixed(2)));
+    if (onQuickUpdateFee) {
+      onQuickUpdateFee(n.id || n.name, newFee);
+    } else {
+      onSaveNeighborhood({ ...n, fee: newFee });
+    }
+    showToast(`Taxa de "${n.name}" ajustada para ${formatCurrency(newFee)}`);
   };
 
   // Helper ID generator
@@ -139,27 +167,48 @@ export const NeighborhoodManagerModal: React.FC<NeighborhoodManagerModalProps> =
     };
     setEditingNeighborhood(newNeighborhood);
     setIsNewNeighborhood(true);
+    setFormName('');
+    setFormFee('6.00');
+    setFormTime('30');
+    setFormMinOrder('');
+    setFormNotes('');
+    setFormIsActive(true);
+  };
+
+  const handleOpenEdit = (n: NeighborhoodFee) => {
+    setEditingNeighborhood(n);
+    setIsNewNeighborhood(false);
+    setFormName(n.name);
+    setFormFee(String(n.fee));
+    setFormTime(String(n.estimatedTimeMin || 30));
+    setFormMinOrder(n.minOrderValue ? String(n.minOrderValue) : '');
+    setFormNotes(n.notes || '');
+    setFormIsActive(n.isActive !== false);
   };
 
   const handleSaveForm = (e: React.FormEvent) => {
     e.preventDefault();
     if (!editingNeighborhood) return;
 
-    if (!editingNeighborhood.name.trim()) {
+    if (!formName.trim()) {
       alert('Por favor, informe o nome do bairro.');
       return;
     }
 
+    const cleanFee = Math.max(0, parseFloat(formFee.replace(',', '.')) || 0);
+    const cleanTime = Math.max(5, parseInt(formTime) || 30);
+    const cleanMinOrder = formMinOrder.trim() ? Math.max(0, parseFloat(formMinOrder.replace(',', '.')) || 0) : undefined;
     const cleanId = editingNeighborhood.id || `bairro-${Date.now()}`;
+
     const toSave: NeighborhoodFee = {
       ...editingNeighborhood,
       id: cleanId,
-      name: editingNeighborhood.name.trim(),
-      fee: Math.max(0, Number(editingNeighborhood.fee) || 0),
-      estimatedTimeMin: Math.max(5, Number(editingNeighborhood.estimatedTimeMin) || 30),
-      minOrderValue: editingNeighborhood.minOrderValue ? Math.max(0, Number(editingNeighborhood.minOrderValue)) : undefined,
-      notes: editingNeighborhood.notes?.trim() || undefined,
-      isActive: editingNeighborhood.isActive !== false,
+      name: formName.trim(),
+      fee: cleanFee,
+      estimatedTimeMin: cleanTime,
+      minOrderValue: cleanMinOrder,
+      notes: formNotes.trim() || undefined,
+      isActive: formIsActive,
     };
 
     onSaveNeighborhood(toSave);
@@ -431,7 +480,7 @@ export const NeighborhoodManagerModal: React.FC<NeighborhoodManagerModalProps> =
                           <button
                             type="button"
                             onClick={() => {
-                              onToggleStatus(key);
+                              handleToggle(key);
                               showToast(isActive ? `Entrega em "${n.name}" pausada.` : `Entrega em "${n.name}" ativada!`);
                             }}
                             className={`px-2 py-1 rounded-xl text-[10px] font-extrabold flex items-center gap-1 cursor-pointer transition-all ${
@@ -450,13 +499,39 @@ export const NeighborhoodManagerModal: React.FC<NeighborhoodManagerModalProps> =
                         <div className="grid grid-cols-2 gap-2 bg-stone-50 p-2.5 rounded-xl border border-stone-100">
                           <div>
                             <span className="text-[10px] font-bold text-stone-400 block uppercase">Taxa de Frete</span>
-                            <span className="text-sm font-black text-rose-600">
-                              {n.fee === 0 ? 'Grátis' : formatCurrency(n.fee)}
-                            </span>
+                            <div className="flex items-center gap-1.5 mt-0.5">
+                              <span className="text-sm font-black text-rose-600">
+                                {n.fee === 0 ? 'Grátis' : formatCurrency(n.fee)}
+                              </span>
+                              <div className="flex items-center gap-0.5 ml-auto">
+                                <button
+                                  type="button"
+                                  onClick={(e) => {
+                                    e.stopPropagation();
+                                    handleQuickStepFee(n, -0.5);
+                                  }}
+                                  className="w-5 h-5 rounded-md bg-stone-200/80 hover:bg-stone-300 text-stone-700 text-[11px] font-black flex items-center justify-center cursor-pointer transition-colors"
+                                  title="Diminuir R$ 0,50"
+                                >
+                                  -
+                                </button>
+                                <button
+                                  type="button"
+                                  onClick={(e) => {
+                                    e.stopPropagation();
+                                    handleQuickStepFee(n, 0.5);
+                                  }}
+                                  className="w-5 h-5 rounded-md bg-stone-200/80 hover:bg-stone-300 text-stone-700 text-[11px] font-black flex items-center justify-center cursor-pointer transition-colors"
+                                  title="Aumentar R$ 0,50"
+                                >
+                                  +
+                                </button>
+                              </div>
+                            </div>
                           </div>
                           <div>
                             <span className="text-[10px] font-bold text-stone-400 block uppercase">Prazo Estimado</span>
-                            <span className="text-xs font-bold text-stone-700 flex items-center gap-1">
+                            <span className="text-xs font-bold text-stone-700 flex items-center gap-1 mt-1">
                               <Clock className="w-3 h-3 text-stone-400" />
                               <span>~{n.estimatedTimeMin || 30} min</span>
                             </span>
@@ -473,10 +548,7 @@ export const NeighborhoodManagerModal: React.FC<NeighborhoodManagerModalProps> =
                           <div className="flex items-center gap-1">
                             <button
                               type="button"
-                              onClick={() => {
-                                setEditingNeighborhood(n);
-                                setIsNewNeighborhood(false);
-                              }}
+                              onClick={() => handleOpenEdit(n)}
                               className="px-2.5 py-1.5 rounded-xl border border-stone-200 text-stone-700 hover:bg-stone-100 text-xs font-bold flex items-center gap-1 cursor-pointer transition-colors"
                             >
                               <Edit2 className="w-3 h-3 text-stone-500" />
@@ -616,8 +688,8 @@ export const NeighborhoodManagerModal: React.FC<NeighborhoodManagerModalProps> =
                   <input
                     type="text"
                     required
-                    value={editingNeighborhood.name}
-                    onChange={(e) => setEditingNeighborhood({ ...editingNeighborhood, name: e.target.value })}
+                    value={formName}
+                    onChange={(e) => setFormName(e.target.value)}
                     placeholder="Ex: Centro, Setor Bueno, Jardim América, Zona Sul..."
                     className="w-full bg-stone-50 border border-stone-200 rounded-xl px-3.5 py-2.5 text-xs font-medium text-stone-900 focus:bg-white focus:outline-none focus:ring-2 focus:ring-rose-500/20"
                   />
@@ -634,12 +706,11 @@ export const NeighborhoodManagerModal: React.FC<NeighborhoodManagerModalProps> =
                         R$
                       </span>
                       <input
-                        type="number"
-                        step="0.50"
-                        min="0"
+                        type="text"
+                        inputMode="decimal"
                         required
-                        value={editingNeighborhood.fee}
-                        onChange={(e) => setEditingNeighborhood({ ...editingNeighborhood, fee: parseFloat(e.target.value) || 0 })}
+                        value={formFee}
+                        onChange={(e) => setFormFee(e.target.value)}
                         className="w-full bg-stone-50 border border-stone-200 rounded-xl pl-9 pr-3.5 py-2.5 text-xs font-black text-rose-600 focus:bg-white focus:outline-none focus:ring-2 focus:ring-rose-500/20"
                       />
                     </div>
@@ -650,9 +721,9 @@ export const NeighborhoodManagerModal: React.FC<NeighborhoodManagerModalProps> =
                         <button
                           key={val}
                           type="button"
-                          onClick={() => setEditingNeighborhood({ ...editingNeighborhood, fee: val })}
+                          onClick={() => setFormFee(String(val))}
                           className={`text-[10px] px-2 py-0.5 rounded-lg border font-bold cursor-pointer transition-colors ${
-                            editingNeighborhood.fee === val
+                            parseFloat(formFee) === val
                               ? 'bg-rose-500 text-white border-rose-500'
                               : 'bg-stone-100 text-stone-700 border-stone-200 hover:bg-stone-200'
                           }`}
@@ -671,13 +742,11 @@ export const NeighborhoodManagerModal: React.FC<NeighborhoodManagerModalProps> =
                     <div className="relative">
                       <Clock className="w-4 h-4 text-stone-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
                       <input
-                        type="number"
-                        step="5"
-                        min="5"
-                        max="180"
+                        type="text"
+                        inputMode="numeric"
                         required
-                        value={editingNeighborhood.estimatedTimeMin || 30}
-                        onChange={(e) => setEditingNeighborhood({ ...editingNeighborhood, estimatedTimeMin: parseInt(e.target.value) || 30 })}
+                        value={formTime}
+                        onChange={(e) => setFormTime(e.target.value)}
                         className="w-full bg-stone-50 border border-stone-200 rounded-xl pl-9 pr-3.5 py-2.5 text-xs font-bold text-stone-800 focus:bg-white focus:outline-none focus:ring-2 focus:ring-rose-500/20"
                       />
                     </div>
@@ -688,9 +757,9 @@ export const NeighborhoodManagerModal: React.FC<NeighborhoodManagerModalProps> =
                         <button
                           key={mins}
                           type="button"
-                          onClick={() => setEditingNeighborhood({ ...editingNeighborhood, estimatedTimeMin: mins })}
+                          onClick={() => setFormTime(String(mins))}
                           className={`text-[10px] px-2 py-0.5 rounded-lg border font-bold cursor-pointer transition-colors ${
-                            editingNeighborhood.estimatedTimeMin === mins
+                            parseInt(formTime) === mins
                               ? 'bg-stone-900 text-white border-stone-900'
                               : 'bg-stone-100 text-stone-700 border-stone-200 hover:bg-stone-200'
                           }`}
@@ -708,11 +777,10 @@ export const NeighborhoodManagerModal: React.FC<NeighborhoodManagerModalProps> =
                     Pedido Mínimo Específico para este Bairro (Opcional - R$)
                   </label>
                   <input
-                    type="number"
-                    step="1"
-                    min="0"
-                    value={editingNeighborhood.minOrderValue || ''}
-                    onChange={(e) => setEditingNeighborhood({ ...editingNeighborhood, minOrderValue: e.target.value ? parseFloat(e.target.value) : undefined })}
+                    type="text"
+                    inputMode="decimal"
+                    value={formMinOrder}
+                    onChange={(e) => setFormMinOrder(e.target.value)}
                     placeholder="Deixe em branco para usar o pedido mínimo padrão da loja"
                     className="w-full bg-stone-50 border border-stone-200 rounded-xl px-3.5 py-2.5 text-xs font-medium text-stone-900 focus:bg-white focus:outline-none focus:ring-2 focus:ring-rose-500/20"
                   />
@@ -726,8 +794,8 @@ export const NeighborhoodManagerModal: React.FC<NeighborhoodManagerModalProps> =
                   </label>
                   <input
                     type="text"
-                    value={editingNeighborhood.notes || ''}
-                    onChange={(e) => setEditingNeighborhood({ ...editingNeighborhood, notes: e.target.value })}
+                    value={formNotes}
+                    onChange={(e) => setFormNotes(e.target.value)}
                     placeholder="Ex: Entregas apenas a partir das 14h, ou consulte pelo WhatsApp"
                     className="w-full bg-stone-50 border border-stone-200 rounded-xl px-3.5 py-2.5 text-xs font-medium text-stone-900 focus:bg-white focus:outline-none focus:ring-2 focus:ring-rose-500/20"
                   />
@@ -745,14 +813,14 @@ export const NeighborhoodManagerModal: React.FC<NeighborhoodManagerModalProps> =
                   </div>
                   <button
                     type="button"
-                    onClick={() => setEditingNeighborhood({ ...editingNeighborhood, isActive: editingNeighborhood.isActive === false })}
+                    onClick={() => setFormIsActive(!formIsActive)}
                     className={`px-3 py-1.5 rounded-xl text-xs font-bold flex items-center gap-1.5 transition-all cursor-pointer ${
-                      editingNeighborhood.isActive !== false
+                      formIsActive
                         ? 'bg-emerald-500 text-white shadow-xs'
                         : 'bg-stone-200 text-stone-600'
                     }`}
                   >
-                    {editingNeighborhood.isActive !== false ? (
+                    {formIsActive ? (
                       <>
                         <Check className="w-3.5 h-3.5" />
                         <span>Bairro Ativo</span>

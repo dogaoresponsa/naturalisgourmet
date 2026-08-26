@@ -117,7 +117,6 @@ export default function App() {
   });
 
   const [categories, setCategories] = useState<CategoryItem[]>(() => {
-    if (!isCatalogSynced) return DEFAULT_CATEGORIES_DATA;
     try {
       const saved = localStorage.getItem('geladinhos_categories');
       return saved ? JSON.parse(saved) : DEFAULT_CATEGORIES_DATA;
@@ -127,7 +126,6 @@ export default function App() {
   });
 
   const [neighborhoods, setNeighborhoods] = useState<NeighborhoodFee[]>(() => {
-    if (!isCatalogSynced) return DEFAULT_NEIGHBORHOODS_DATA;
     try {
       const saved = localStorage.getItem('geladinhos_neighborhoods');
       return saved ? JSON.parse(saved) : DEFAULT_NEIGHBORHOODS_DATA;
@@ -742,11 +740,18 @@ export default function App() {
   // Neighborhoods CRUD & Management Handlers
   const handleSaveNeighborhood = (savedNeighborhood: NeighborhoodFee) => {
     setNeighborhoods((prev) => {
-      const id = savedNeighborhood.id || savedNeighborhood.name;
-      const idx = prev.findIndex((n) => (n.id || n.name) === id);
+      const targetId = savedNeighborhood.id?.trim();
+      const targetName = savedNeighborhood.name.trim().toLowerCase();
+
+      const idx = prev.findIndex((n) => {
+        if (targetId && n.id && n.id === targetId) return true;
+        if (n.name && n.name.trim().toLowerCase() === targetName) return true;
+        return false;
+      });
+
       if (idx > -1) {
         const next = [...prev];
-        next[idx] = savedNeighborhood;
+        next[idx] = { ...prev[idx], ...savedNeighborhood };
         return next;
       }
       return [savedNeighborhood, ...prev];
@@ -754,7 +759,9 @@ export default function App() {
   };
 
   const handleDeleteNeighborhood = (neighborhoodId: string) => {
-    setNeighborhoods((prev) => prev.filter((n) => (n.id || n.name) !== neighborhoodId));
+    setNeighborhoods((prev) =>
+      prev.filter((n) => n.id !== neighborhoodId && n.name !== neighborhoodId && (n.id || n.name) !== neighborhoodId)
+    );
   };
 
   const handleDuplicateNeighborhood = (neighborhood: NeighborhoodFee) => {
@@ -769,8 +776,19 @@ export default function App() {
   const handleToggleNeighborhoodStatus = (neighborhoodId: string) => {
     setNeighborhoods((prev) =>
       prev.map((n) => {
-        if ((n.id || n.name) === neighborhoodId) {
+        if (n.id === neighborhoodId || n.name === neighborhoodId || (n.id || n.name) === neighborhoodId) {
           return { ...n, isActive: n.isActive === false ? true : false };
+        }
+        return n;
+      })
+    );
+  };
+
+  const handleQuickUpdateNeighborhoodFee = (neighborhoodId: string, newFee: number) => {
+    setNeighborhoods((prev) =>
+      prev.map((n) => {
+        if (n.id === neighborhoodId || n.name === neighborhoodId || (n.id || n.name) === neighborhoodId) {
+          return { ...n, fee: Math.max(0, Number(newFee.toFixed(2))) };
         }
         return n;
       })
@@ -1399,6 +1417,7 @@ export default function App() {
         onSaveCategory={handleSaveCategory}
         onDeleteCategory={handleDeleteCategory}
         onReorderCategories={handleReorderCategories}
+        onOpenNeighborhoods={() => requestAdminAction('neighborhoods')}
         onResetToDefaults={handleResetCatalogDefaults}
         onImportCatalog={handleImportCatalog}
       />
@@ -1469,6 +1488,7 @@ export default function App() {
         onDeleteNeighborhood={handleDeleteNeighborhood}
         onDuplicateNeighborhood={handleDuplicateNeighborhood}
         onToggleNeighborhoodStatus={handleToggleNeighborhoodStatus}
+        onQuickUpdateFee={handleQuickUpdateNeighborhoodFee}
         onBulkUpdateFees={handleBulkUpdateNeighborhoodFees}
         onResetToDefaults={handleResetNeighborhoodDefaults}
         onImportNeighborhoods={handleImportNeighborhoods}

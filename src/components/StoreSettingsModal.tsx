@@ -21,12 +21,18 @@ export const StoreSettingsModal: React.FC<StoreSettingsModalProps> = ({
   onLogoutAdmin,
 }) => {
   const [formData, setFormData] = useState<StoreSettings>(settings);
+  const [standardFeeStr, setStandardFeeStr] = useState(String(settings.standardDeliveryFee ?? 6.0));
+  const [minOrderStr, setMinOrderStr] = useState(String(settings.minOrderValue ?? 15.0));
+  const [freeThresholdStr, setFreeThresholdStr] = useState(String(settings.freeDeliveryThreshold ?? 70.0));
   const [savedSuccess, setSavedSuccess] = useState(false);
 
   // Sync state whenever modal opens or settings change from outside
   useEffect(() => {
     if (isOpen) {
       setFormData(settings);
+      setStandardFeeStr(String(settings.standardDeliveryFee ?? 6.0));
+      setMinOrderStr(String(settings.minOrderValue ?? 15.0));
+      setFreeThresholdStr(String(settings.freeDeliveryThreshold ?? 70.0));
     }
   }, [isOpen, settings]);
 
@@ -34,21 +40,23 @@ export const StoreSettingsModal: React.FC<StoreSettingsModalProps> = ({
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    onSaveSettings(formData);
+    const finalStandardFee = Math.max(0, parseFloat(standardFeeStr.replace(',', '.')) || 0);
+    const finalMinOrder = Math.max(0, parseFloat(minOrderStr.replace(',', '.')) || 0);
+    const finalFreeThreshold = Math.max(0, parseFloat(freeThresholdStr.replace(',', '.')) || 0);
+
+    const updatedSettings: StoreSettings = {
+      ...formData,
+      standardDeliveryFee: finalStandardFee,
+      minOrderValue: finalMinOrder,
+      freeDeliveryThreshold: finalFreeThreshold,
+    };
+
+    onSaveSettings(updatedSettings);
     setSavedSuccess(true);
     setTimeout(() => {
       setSavedSuccess(false);
       onClose();
     }, 600);
-  };
-
-  const handleNumberChange = (field: keyof StoreSettings, valStr: string) => {
-    const sanitized = valStr.replace(',', '.');
-    const num = parseFloat(sanitized);
-    setFormData((prev) => ({
-      ...prev,
-      [field]: isNaN(num) ? 0 : num,
-    }));
   };
 
   return (
@@ -140,8 +148,9 @@ export const StoreSettingsModal: React.FC<StoreSettingsModalProps> = ({
                 <input
                   type="text"
                   inputMode="decimal"
-                  value={formData.standardDeliveryFee ?? 6.0}
-                  onChange={(e) => handleNumberChange('standardDeliveryFee', e.target.value)}
+                  value={standardFeeStr}
+                  onChange={(e) => setStandardFeeStr(e.target.value)}
+                  placeholder="6.00"
                   className="w-full bg-white border border-stone-200 rounded-xl px-3 py-2 text-xs text-stone-900 font-bold focus:outline-none focus:ring-2 focus:ring-rose-500/20"
                 />
               </div>
@@ -153,8 +162,9 @@ export const StoreSettingsModal: React.FC<StoreSettingsModalProps> = ({
                 <input
                   type="text"
                   inputMode="decimal"
-                  value={formData.minOrderValue ?? 15.0}
-                  onChange={(e) => handleNumberChange('minOrderValue', e.target.value)}
+                  value={minOrderStr}
+                  onChange={(e) => setMinOrderStr(e.target.value)}
+                  placeholder="15.00"
                   className="w-full bg-white border border-stone-200 rounded-xl px-3 py-2 text-xs text-stone-900 font-bold focus:outline-none focus:ring-2 focus:ring-rose-500/20"
                 />
               </div>
@@ -166,8 +176,9 @@ export const StoreSettingsModal: React.FC<StoreSettingsModalProps> = ({
                 <input
                   type="text"
                   inputMode="decimal"
-                  value={formData.freeDeliveryThreshold ?? 70.0}
-                  onChange={(e) => handleNumberChange('freeDeliveryThreshold', e.target.value)}
+                  value={freeThresholdStr}
+                  onChange={(e) => setFreeThresholdStr(e.target.value)}
+                  placeholder="70.00"
                   className="w-full bg-white border border-stone-200 rounded-xl px-3 py-2 text-xs text-stone-900 font-bold focus:outline-none focus:ring-2 focus:ring-rose-500/20"
                 />
               </div>

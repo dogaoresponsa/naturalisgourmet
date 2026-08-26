@@ -4,7 +4,7 @@ import {
   RotateCcw, Package, AlertCircle, Eye, EyeOff, Tag, Image as ImageIcon,
   DollarSign, ArrowUpDown, Filter, BarChart3, Download, Upload, CheckCircle2,
   Boxes, TrendingDown, Minus, History, Layers, ArrowUp, ArrowDown, FolderTree,
-  Palette, Info
+  Palette, Info, MapPin
 } from 'lucide-react';
 import { GeladinhoProduct, PromoCombo, ProductCategory, StockMovement, CategoryItem } from '../types';
 import { DEFAULT_CATEGORIES_DATA, CATEGORIES_DATA, PRODUCTS_DATA, PROMO_COMBOS_DATA } from '../data/products';
@@ -32,6 +32,7 @@ interface MenuManagerModalProps {
   onSaveCategory?: (category: CategoryItem) => void;
   onDeleteCategory?: (categoryId: string, reassignTo?: string) => void;
   onReorderCategories?: (categories: CategoryItem[]) => void;
+  onOpenNeighborhoods?: () => void;
   onResetToDefaults: () => void;
   onImportCatalog: (data: { products: GeladinhoProduct[]; combos: PromoCombo[]; categories?: CategoryItem[] }) => void;
 }
@@ -101,6 +102,7 @@ export const MenuManagerModal: React.FC<MenuManagerModalProps> = ({
   onSaveCategory,
   onDeleteCategory,
   onReorderCategories,
+  onOpenNeighborhoods,
   onResetToDefaults,
   onImportCatalog,
 }) => {
@@ -566,6 +568,21 @@ export const MenuManagerModal: React.FC<MenuManagerModalProps> = ({
               >
                 <Plus className="w-4 h-4" />
                 <span>Novo Combo</span>
+              </button>
+            )}
+
+            {onOpenNeighborhoods && (
+              <button
+                type="button"
+                onClick={() => {
+                  onClose();
+                  onOpenNeighborhoods();
+                }}
+                className="px-3 py-1.5 bg-rose-50 hover:bg-rose-100 text-rose-700 rounded-xl text-xs font-bold flex items-center gap-1.5 transition-colors cursor-pointer border border-rose-200 shadow-2xs"
+                title="Configurar fretes e bairros"
+              >
+                <MapPin className="w-3.5 h-3.5 text-rose-500" />
+                <span>Bairros & Frete</span>
               </button>
             )}
 
