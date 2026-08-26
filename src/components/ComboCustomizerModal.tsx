@@ -99,13 +99,19 @@ export const ComboCustomizerModal: React.FC<ComboCustomizerModalProps> = ({
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-stone-950/50 backdrop-blur-xs animate-in fade-in duration-200">
+    <div 
+      className="fixed inset-0 z-50 flex items-end sm:items-center justify-center p-0 sm:p-4 bg-stone-950/60 backdrop-blur-xs animate-in fade-in duration-200"
+      onClick={onClose}
+    >
       <div 
-        className="relative w-full max-w-2xl bg-white rounded-3xl shadow-2xl overflow-hidden max-h-[90vh] flex flex-col border border-stone-200 animate-in zoom-in-95 duration-200"
+        className="relative w-full max-w-2xl bg-white rounded-t-3xl sm:rounded-3xl shadow-2xl overflow-hidden max-h-[92vh] sm:max-h-[90vh] flex flex-col border-t sm:border border-stone-200 animate-in slide-in-from-bottom-6 sm:zoom-in-95 duration-300"
         onClick={(e) => e.stopPropagation()}
       >
+        {/* Mobile drag handle indicator */}
+        <div className="w-12 h-1.5 bg-stone-300 rounded-full mx-auto my-2.5 sm:hidden shrink-0" />
+
         {/* Header */}
-        <div className="p-5 bg-white text-stone-900 flex items-center justify-between border-b border-stone-100">
+        <div className="p-4 sm:p-5 bg-white text-stone-900 flex items-center justify-between border-b border-stone-100">
           <div>
             <div className="flex items-center gap-2">
               <Package className="w-4 h-4 text-rose-500" />
@@ -248,7 +254,7 @@ export const ComboCustomizerModal: React.FC<ComboCustomizerModalProps> = ({
         </div>
 
         {/* Footer */}
-        <div className="p-4 bg-white border-t border-stone-100 flex items-center justify-between gap-3">
+        <div className="p-3.5 sm:p-4 bg-white border-t border-stone-100 flex items-center justify-between gap-3 pb-safe">
           <div>
             <span className="text-xs text-stone-500 font-medium block">Total do Kit Promocional</span>
             <span className="text-2xl font-extrabold text-stone-900">

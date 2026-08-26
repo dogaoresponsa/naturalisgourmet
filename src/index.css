@@ -9,6 +9,16 @@
       radial-gradient(at 0% 0%, rgba(244, 63, 94, 0.03) 0px, transparent 50%),
       radial-gradient(at 100% 100%, rgba(245, 158, 11, 0.03) 0px, transparent 50%);
     background-attachment: fixed;
+    -webkit-tap-highlight-color: transparent;
+    touch-action: manipulation;
+  }
+
+  /* Safe area helpers for notch and home bar */
+  .pb-safe {
+    padding-bottom: env(safe-area-inset-bottom, 16px);
+  }
+  .pt-safe {
+    padding-top: env(safe-area-inset-top, 0px);
   }
 
   h1, h2, h3, .font-display {

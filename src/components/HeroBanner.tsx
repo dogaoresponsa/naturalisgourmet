@@ -168,6 +168,7 @@ export const HeroBanner: React.FC<HeroBannerProps> = ({
   const [isPaused, setIsPaused] = useState(false);
   const [addedFeedback, setAddedFeedback] = useState<string | null>(null);
   const [progress, setProgress] = useState(0);
+  const [touchStartX, setTouchStartX] = useState<number | null>(null);
 
   const SLIDE_DURATION = 4200; // 4.2 seconds for dynamic auto-rotation
   const TICK_INTERVAL = 50; // Progress bar tick
@@ -189,6 +190,29 @@ export const HeroBanner: React.FC<HeroBannerProps> = ({
   // Keep index within safe bounds if products are deleted/added
   const safeIndex = slides.length > 0 ? currentSlideIndex % slides.length : 0;
   const currentSlide = slides[safeIndex];
+
+  // Touch handlers for mobile swipe
+  const handleTouchStart = (e: React.TouchEvent) => {
+    if (e.touches.length > 0) {
+      setTouchStartX(e.touches[0].clientX);
+    }
+  };
+
+  const handleTouchEnd = (e: React.TouchEvent) => {
+    if (touchStartX === null || e.changedTouches.length === 0) return;
+    const touchEndX = e.changedTouches[0].clientX;
+    const diff = touchStartX - touchEndX;
+    if (Math.abs(diff) > 40) {
+      if (diff > 0) {
+        // Swiped left -> Next
+        handleNextSlide();
+      } else {
+        // Swiped right -> Prev
+        handlePrevSlide();
+      }
+    }
+    setTouchStartX(null);
+  };
 
   // Automatic random rotation and progress bar loop
   useEffect(() => {
@@ -290,7 +314,9 @@ export const HeroBanner: React.FC<HeroBannerProps> = ({
         {/* 1. BANNER ROTATIVO (Exibe APENAS os itens reais do cardápio)  */}
         {/* ============================================================ */}
         <div 
-          className="md:col-span-2 lg:col-span-2 lg:row-span-2 bg-gradient-to-br from-stone-950 via-stone-900 to-stone-950 rounded-3xl p-6 sm:p-7 text-white flex flex-col justify-between shadow-2xl shadow-stone-950/30 border border-stone-800/90 relative overflow-hidden group select-none transition-all"
+          className="md:col-span-2 lg:col-span-2 lg:row-span-2 bg-gradient-to-br from-stone-950 via-stone-900 to-stone-950 rounded-3xl p-4 sm:p-7 text-white flex flex-col justify-between shadow-2xl shadow-stone-950/30 border border-stone-800/90 relative overflow-hidden group select-none transition-all touch-pan-y"
+          onTouchStart={handleTouchStart}
+          onTouchEnd={handleTouchEnd}
         >
           {/* Dynamic Ambient Glow lights matched to current item flavor */}
           <div 

@@ -218,21 +218,27 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-stone-950/50 backdrop-blur-xs animate-in fade-in duration-200">
+    <div 
+      className="fixed inset-0 z-50 flex items-end sm:items-center justify-center p-0 sm:p-4 bg-stone-950/60 backdrop-blur-xs animate-in fade-in duration-200"
+      onClick={onClose}
+    >
       <div 
-        className="relative w-full max-w-2xl bg-white rounded-3xl shadow-2xl overflow-hidden max-h-[92vh] flex flex-col border border-stone-200 animate-in zoom-in-95 duration-200"
+        className="relative w-full max-w-2xl bg-white rounded-t-3xl sm:rounded-3xl shadow-2xl overflow-hidden max-h-[94vh] sm:max-h-[92vh] flex flex-col border-t sm:border border-stone-200 animate-in slide-in-from-bottom-6 sm:zoom-in-95 duration-300"
         onClick={(e) => e.stopPropagation()}
       >
+        {/* Mobile drag handle indicator */}
+        <div className="w-12 h-1.5 bg-stone-300 rounded-full mx-auto my-2.5 sm:hidden shrink-0" />
+
         {/* Modal Top Banner */}
         <div className="p-4 sm:p-5 bg-white text-stone-900 flex items-center justify-between border-b border-stone-100">
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-2.5 sm:gap-3">
             <div className="p-2 rounded-xl bg-emerald-50 text-emerald-600 border border-emerald-100">
               <ShoppingBag className="w-5 h-5" />
             </div>
             <div>
-              <h2 className="font-extrabold text-lg sm:text-xl text-stone-900 tracking-tight">Finalizar Pedido</h2>
+              <h2 className="font-extrabold text-base sm:text-xl text-stone-900 tracking-tight">Finalizar Pedido</h2>
               <p className="text-xs text-stone-500 font-normal">
-                Preencha os dados e receba seu pedido geladinho rapidamente via WhatsApp!
+                Receba seu pedido geladinho rapidamente via WhatsApp!
               </p>
             </div>
           </div>
@@ -616,7 +622,7 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({
         </div>
 
         {/* Modal Bottom Summary & WhatsApp Submit */}
-        <div className="p-4 sm:p-5 bg-white border-t border-stone-100 space-y-3">
+        <div className="p-3.5 sm:p-5 bg-white border-t border-stone-100 space-y-3 pb-safe">
           {/* Order Totals Recap */}
           <div className="bg-stone-50 p-3.5 rounded-2xl border border-stone-200/80 space-y-1.5 text-xs">
             <div className="flex justify-between text-stone-600 font-medium">

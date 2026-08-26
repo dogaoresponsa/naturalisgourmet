@@ -71,16 +71,22 @@ export const FlavorQuizModal: React.FC<FlavorQuizModalProps> = ({
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-stone-950/50 backdrop-blur-xs animate-in fade-in duration-200">
+    <div 
+      className="fixed inset-0 z-50 flex items-end sm:items-center justify-center p-0 sm:p-4 bg-stone-950/60 backdrop-blur-xs animate-in fade-in duration-200"
+      onClick={onClose}
+    >
       <div 
-        className="relative w-full max-w-md bg-white rounded-3xl shadow-2xl overflow-hidden max-h-[90vh] flex flex-col border border-stone-200 animate-in zoom-in-95 duration-200"
+        className="relative w-full max-w-md bg-white rounded-t-3xl sm:rounded-3xl shadow-2xl overflow-hidden max-h-[92vh] sm:max-h-[90vh] flex flex-col border-t sm:border border-stone-200 animate-in slide-in-from-bottom-6 sm:zoom-in-95 duration-300"
         onClick={(e) => e.stopPropagation()}
       >
+        {/* Mobile drag handle indicator */}
+        <div className="w-12 h-1.5 bg-stone-300 rounded-full mx-auto my-2.5 sm:hidden shrink-0" />
+
         {/* Header */}
-        <div className="p-5 bg-white text-stone-900 flex items-center justify-between border-b border-stone-100">
+        <div className="p-4 sm:p-5 bg-white text-stone-900 flex items-center justify-between border-b border-stone-100">
           <div className="flex items-center gap-2">
             <Sparkles className="w-4 h-4 text-rose-500" />
-            <h2 className="font-extrabold text-lg text-stone-900 tracking-tight">Descubra seu Sabor Ideal</h2>
+            <h2 className="font-extrabold text-base sm:text-lg text-stone-900 tracking-tight">Descubra seu Sabor Ideal</h2>
           </div>
           <button
             onClick={onClose}
@@ -92,7 +98,7 @@ export const FlavorQuizModal: React.FC<FlavorQuizModalProps> = ({
         </div>
 
         {/* Quiz Steps */}
-        <div className="p-6 overflow-y-auto flex-1">
+        <div className="p-4 sm:p-6 overflow-y-auto flex-1 pb-safe">
           {step === 1 && (
             <div className="space-y-4">
               <div className="text-center">

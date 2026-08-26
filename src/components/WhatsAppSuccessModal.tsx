@@ -17,6 +17,7 @@ interface WhatsAppSuccessModalProps {
 
 export const WhatsAppSuccessModal: React.FC<WhatsAppSuccessModalProps> = ({
   isOpen,
+  onClose,
   whatsappUrl,
   rawMessage,
   orderSummary,
@@ -52,11 +53,17 @@ export const WhatsAppSuccessModal: React.FC<WhatsAppSuccessModalProps> = ({
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-stone-950/50 backdrop-blur-xs animate-in fade-in duration-200">
+    <div 
+      className="fixed inset-0 z-50 flex items-end sm:items-center justify-center p-0 sm:p-4 bg-stone-950/60 backdrop-blur-xs animate-in fade-in duration-200"
+      onClick={onClose}
+    >
       <div 
-        className="relative w-full max-w-lg bg-white rounded-3xl shadow-2xl overflow-hidden max-h-[92vh] flex flex-col border border-stone-200 animate-in zoom-in-95 duration-200"
+        className="relative w-full max-w-lg bg-white rounded-t-3xl sm:rounded-3xl shadow-2xl overflow-hidden max-h-[94vh] sm:max-h-[92vh] flex flex-col border-t sm:border border-stone-200 animate-in slide-in-from-bottom-6 sm:zoom-in-95 duration-300"
         onClick={(e) => e.stopPropagation()}
       >
+        {/* Mobile drag handle indicator */}
+        <div className="w-12 h-1.5 bg-stone-300 rounded-full mx-auto my-2.5 sm:hidden shrink-0" />
+
         {/* Top Success Header */}
         <div className="p-6 bg-white text-stone-900 text-center border-b border-stone-100">
           <div className="flex items-center justify-center gap-3 mb-2">
@@ -177,7 +184,7 @@ export const WhatsAppSuccessModal: React.FC<WhatsAppSuccessModalProps> = ({
         </div>
 
         {/* Footer */}
-        <div className="p-4 bg-white border-t border-stone-100 flex items-center justify-between">
+        <div className="p-3.5 sm:p-4 bg-white border-t border-stone-100 flex items-center justify-between pb-safe">
           <button
             onClick={onNewOrder}
             className="text-xs font-semibold text-stone-600 hover:text-stone-900 flex items-center gap-1.5 px-3 py-2 rounded-xl hover:bg-stone-100 transition-colors cursor-pointer"
