@@ -106,8 +106,8 @@ export const WhatsAppSuccessModal: React.FC<WhatsAppSuccessModalProps> = ({
               </div>
               <div className="flex items-center justify-between bg-white p-3 rounded-xl border border-emerald-200/80">
                 <div className="text-xs">
-                  <span className="text-[10px] text-stone-500 block font-medium">Chave {storeSettings.pixKeyType}:</span>
-                  <span className="font-mono font-bold text-emerald-700 select-all">{storeSettings.pixKey}</span>
+                  <span className="text-[10px] text-stone-500 block font-medium">Chave {storeSettings?.pixKeyType || 'PIX'}:</span>
+                  <span className="font-mono font-bold text-emerald-700 select-all">{storeSettings?.pixKey || ''}</span>
                 </div>
                 <button
                   onClick={handleCopyPix}

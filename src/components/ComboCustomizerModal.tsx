@@ -86,10 +86,14 @@ export const ComboCustomizerModal: React.FC<ComboCustomizerModalProps> = ({
 
   const handleConfirm = () => {
     if (totalSelected !== combo.itemsCount) return;
-    const itemsList = Object.entries(flavorSelections).map(([productId, quantity]) => {
-      const product = allProducts.find((p) => p.id === productId)!;
-      return { product, quantity };
+    const itemsList: { product: GeladinhoProduct; quantity: number }[] = [];
+    Object.entries(flavorSelections).forEach(([productId, quantity]) => {
+      const product = allProducts.find((p) => p && p.id === productId);
+      if (product && quantity > 0) {
+        itemsList.push({ product, quantity });
+      }
     });
+    if (itemsList.length === 0) return;
     onConfirmCombo(combo, itemsList);
     onClose();
   };

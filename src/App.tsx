@@ -842,7 +842,8 @@ export default function App() {
     combo: PromoCombo,
     selectedFlavors: { product: GeladinhoProduct; quantity: number }[]
   ) => {
-    setCartCombos((prev) => [...prev, { combo, quantity: 1, selectedFlavors }]);
+    const validFlavors = (selectedFlavors || []).filter((f) => f && f.product);
+    setCartCombos((prev) => [...prev, { combo, quantity: 1, selectedFlavors: validFlavors }]);
     setIsCartOpen(true);
   };
 

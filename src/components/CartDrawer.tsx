@@ -141,10 +141,13 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({
           ) : (
             <>
               {/* Individual items list */}
-              {items.map((item) => {
+              {validItems.map((item) => {
+                if (!item?.product) return null;
                 const isTracked = item.product.trackStock !== false;
                 const currentStock = isTracked ? (item.product.stockQuantity ?? 0) : 999;
-                const isMaxReached = isTracked && item.quantity >= currentStock;
+                const isMaxReached = isTracked && (item.quantity || 1) >= currentStock;
+                const price = typeof item.product.price === 'number' ? item.product.price : 0;
+                const qty = item.quantity || 1;
 
                 return (
                   <div key={item.product.id} className="bg-white p-3 rounded-2xl border border-stone-200/80 shadow-xs flex items-center gap-3">
@@ -160,7 +163,7 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({
                         {item.product.name}
                       </h4>
                       <p className="text-[11px] text-stone-500 font-medium">
-                        {formatCurrency(item.product.price)} cada
+                        {formatCurrency(price)} cada
                         {isTracked && (
                           <span className="text-[10px] text-stone-400 ml-1">
                             ({currentStock} em estoque)
@@ -177,7 +180,7 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({
                     {/* Quantity control */}
                     <div className="flex items-center gap-1 bg-stone-100 rounded-xl p-1 shrink-0">
                       <button
-                        onClick={() => onUpdateItemQuantity(item.product.id, item.quantity - 1)}
+                        onClick={() => onUpdateItemQuantity(item.product.id, qty - 1)}
                         className="w-6 h-6 flex items-center justify-center rounded-lg bg-white hover:bg-stone-50 text-stone-700 font-bold transition-colors cursor-pointer shadow-xs"
                         aria-label="Diminuir"
                       >
@@ -185,13 +188,13 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({
                       </button>
 
                       <span className="w-5 text-center text-xs font-bold text-stone-900">
-                        {item.quantity}
+                        {qty}
                       </span>
 
                       <button
                         onClick={() => {
                           if (!isMaxReached) {
-                            onUpdateItemQuantity(item.product.id, item.quantity + 1);
+                            onUpdateItemQuantity(item.product.id, qty + 1);
                           }
                         }}
                         disabled={isMaxReached}
@@ -210,7 +213,7 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({
                     {/* Total item & remove */}
                     <div className="text-right shrink-0">
                       <span className="text-xs font-bold text-stone-900 block">
-                        {formatCurrency(item.product.price * item.quantity)}
+                        {formatCurrency(price * qty)}
                       </span>
                       <button
                         onClick={() => onRemoveItem(item.product.id)}
@@ -225,42 +228,45 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({
               })}
 
               {/* Combos list */}
-              {combos.map((comboItem, idx) => (
-                <div key={idx} className="bg-white p-3.5 rounded-2xl border border-stone-200/80 shadow-xs space-y-2">
-                  <div className="flex items-start justify-between gap-2">
-                    <div className="flex items-center gap-2">
-                      <Package className="w-4 h-4 text-rose-500 shrink-0" />
-                      <div>
-                        <h4 className="text-xs font-bold text-stone-900">
-                          {comboItem.combo.title}
-                        </h4>
-                        <span className="text-[11px] font-bold text-rose-600">
-                          {formatCurrency(comboItem.combo.price)}
-                        </span>
-                      </div>
-                    </div>
-
-                    <button
-                      onClick={() => onRemoveCombo(idx)}
-                      className="text-stone-400 hover:text-rose-600 p-1 transition-colors cursor-pointer"
-                      title="Remover combo"
-                    >
-                      <Trash2 className="w-3.5 h-3.5" />
-                    </button>
-                  </div>
-
-                  {/* Selected flavors inside combo */}
-                  {comboItem.selectedFlavors && comboItem.selectedFlavors.length > 0 && (
-                    <div className="text-[10px] text-stone-600 space-y-0.5 pl-3 border-l border-stone-200 font-medium">
-                      {comboItem.selectedFlavors.map((f, i) => (
-                        <div key={i} className="flex justify-between">
-                          <span>{f.quantity}x {f.product.name}</span>
+              {validCombos.map((comboItem, idx) => {
+                if (!comboItem?.combo) return null;
+                return (
+                  <div key={idx} className="bg-white p-3.5 rounded-2xl border border-stone-200/80 shadow-xs space-y-2">
+                    <div className="flex items-start justify-between gap-2">
+                      <div className="flex items-center gap-2">
+                        <Package className="w-4 h-4 text-rose-500 shrink-0" />
+                        <div>
+                          <h4 className="text-xs font-bold text-stone-900">
+                            {comboItem.combo.title}
+                          </h4>
+                          <span className="text-[11px] font-bold text-rose-600">
+                            {formatCurrency(comboItem.combo.price)}
+                          </span>
                         </div>
-                      ))}
+                      </div>
+
+                      <button
+                        onClick={() => onRemoveCombo(idx)}
+                        className="text-stone-400 hover:text-rose-600 p-1 transition-colors cursor-pointer"
+                        title="Remover combo"
+                      >
+                        <Trash2 className="w-3.5 h-3.5" />
+                      </button>
                     </div>
-                  )}
-                </div>
-              ))}
+
+                    {/* Selected flavors inside combo */}
+                    {comboItem.selectedFlavors && comboItem.selectedFlavors.length > 0 && (
+                      <div className="text-[10px] text-stone-600 space-y-0.5 pl-3 border-l border-stone-200 font-medium">
+                        {comboItem.selectedFlavors.map((f, i) => (
+                          <div key={i} className="flex justify-between">
+                            <span>{f?.quantity || 1}x {f?.product?.name || 'Sabor do Kit'}</span>
+                          </div>
+                        ))}
+                      </div>
+                    )}
+                  </div>
+                );
+              })}
             </>
           )}
         </div>

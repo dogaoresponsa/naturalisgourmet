@@ -80,7 +80,7 @@ export const ProductDetailModal: React.FC<ProductDetailModalProps> = ({
                   ⚡ Restam apenas {currentStock} un.
                 </span>
               )}
-              {product.badges.map((b, i) => (
+              {(product.badges || []).map((b, i) => (
                 <span
                   key={i}
                   className="px-2.5 py-1 rounded-full text-xs font-semibold bg-white/95 text-stone-800 shadow-sm backdrop-blur-xs"
@@ -95,9 +95,9 @@ export const ProductDetailModal: React.FC<ProductDetailModalProps> = ({
               <div className="flex items-center gap-2 mb-1.5">
                 <div className="flex items-center gap-1 bg-amber-400 text-stone-900 px-2 py-0.5 rounded-lg text-xs font-bold">
                   <Star className="w-3.5 h-3.5 fill-stone-900" />
-                  <span>{product.rating.toFixed(1)}</span>
+                  <span>{(product.rating || 5).toFixed(1)}</span>
                 </div>
-                <span className="text-xs text-white/80 font-normal">({product.reviewsCount} avaliações)</span>
+                <span className="text-xs text-white/80 font-normal">({product.reviewsCount || 0} avaliações)</span>
                 <span className="text-white/60">•</span>
                 <span className="text-xs text-stone-200 font-semibold">{product.volumeMl}ml</span>
               </div>
@@ -147,75 +147,79 @@ export const ProductDetailModal: React.FC<ProductDetailModalProps> = ({
             </div>
 
             {/* Flavor Profile meters */}
-            <div className="bg-stone-50 p-4 rounded-2xl border border-stone-200/70 space-y-2.5">
-              <span className="text-xs font-bold text-stone-500 uppercase tracking-wider block">
-                Perfil de Sabor & Textura
-              </span>
+            {product.flavorProfile && (
+              <div className="bg-stone-50 p-4 rounded-2xl border border-stone-200/70 space-y-2.5">
+                <span className="text-xs font-bold text-stone-500 uppercase tracking-wider block">
+                  Perfil de Sabor & Textura
+                </span>
 
-              <div className="grid grid-cols-3 gap-3 text-center">
-                <div>
-                  <span className="text-[11px] text-stone-500 font-medium block mb-1">Doçura</span>
-                  <div className="flex justify-center gap-1">
-                    {[1, 2, 3, 4, 5].map((level) => (
-                      <span
-                        key={level}
-                        className={`w-2.5 h-2 rounded-full ${
-                          level <= product.flavorProfile.sweetness ? 'bg-amber-400' : 'bg-stone-200'
-                        }`}
-                      />
-                    ))}
+                <div className="grid grid-cols-3 gap-3 text-center">
+                  <div>
+                    <span className="text-[11px] text-stone-500 font-medium block mb-1">Doçura</span>
+                    <div className="flex justify-center gap-1">
+                      {[1, 2, 3, 4, 5].map((level) => (
+                        <span
+                          key={level}
+                          className={`w-2.5 h-2 rounded-full ${
+                            level <= (product.flavorProfile?.sweetness ?? 3) ? 'bg-amber-400' : 'bg-stone-200'
+                          }`}
+                        />
+                      ))}
+                    </div>
                   </div>
-                </div>
 
-                <div>
-                  <span className="text-[11px] text-stone-500 font-medium block mb-1">Cremosidade</span>
-                  <div className="flex justify-center gap-1">
-                    {[1, 2, 3, 4, 5].map((level) => (
-                      <span
-                        key={level}
-                        className={`w-2.5 h-2 rounded-full ${
-                          level <= product.flavorProfile.creaminess ? 'bg-rose-500' : 'bg-stone-200'
-                        }`}
-                      />
-                    ))}
+                  <div>
+                    <span className="text-[11px] text-stone-500 font-medium block mb-1">Cremosidade</span>
+                    <div className="flex justify-center gap-1">
+                      {[1, 2, 3, 4, 5].map((level) => (
+                        <span
+                          key={level}
+                          className={`w-2.5 h-2 rounded-full ${
+                            level <= (product.flavorProfile?.creaminess ?? 3) ? 'bg-rose-500' : 'bg-stone-200'
+                          }`}
+                        />
+                      ))}
+                    </div>
                   </div>
-                </div>
 
-                <div>
-                  <span className="text-[11px] text-stone-500 font-medium block mb-1">Frutado</span>
-                  <div className="flex justify-center gap-1">
-                    {[1, 2, 3, 4, 5].map((level) => (
-                      <span
-                        key={level}
-                        className={`w-2.5 h-2 rounded-full ${
-                          level <= product.flavorProfile.fruitiness ? 'bg-emerald-500' : 'bg-stone-200'
-                        }`}
-                      />
-                    ))}
+                  <div>
+                    <span className="text-[11px] text-stone-500 font-medium block mb-1">Frutado</span>
+                    <div className="flex justify-center gap-1">
+                      {[1, 2, 3, 4, 5].map((level) => (
+                        <span
+                          key={level}
+                          className={`w-2.5 h-2 rounded-full ${
+                            level <= (product.flavorProfile?.fruitiness ?? 3) ? 'bg-emerald-500' : 'bg-stone-200'
+                          }`}
+                        />
+                      ))}
+                    </div>
                   </div>
                 </div>
               </div>
-            </div>
+            )}
 
             {/* Ingredients */}
-            <div>
-              <span className="text-xs font-bold text-stone-500 uppercase tracking-wider block mb-2">
-                Ingredientes Selecionados
-              </span>
-              <div className="flex flex-wrap gap-1.5">
-                {product.ingredients.map((ing, i) => (
-                  <span
-                    key={i}
-                    className="text-xs bg-stone-100 text-stone-700 px-2.5 py-1 rounded-lg font-medium"
-                  >
-                    ✓ {ing}
-                  </span>
-                ))}
+            {Array.isArray(product.ingredients) && product.ingredients.length > 0 && (
+              <div>
+                <span className="text-xs font-bold text-stone-500 uppercase tracking-wider block mb-2">
+                  Ingredientes Selecionados
+                </span>
+                <div className="flex flex-wrap gap-1.5">
+                  {product.ingredients.map((ing, i) => (
+                    <span
+                      key={i}
+                      className="text-xs bg-stone-100 text-stone-700 px-2.5 py-1 rounded-lg font-medium"
+                    >
+                      ✓ {ing}
+                    </span>
+                  ))}
+                </div>
               </div>
-            </div>
+            )}
 
             {/* Allergens warning */}
-            {product.allergens.length > 0 && (
+            {Array.isArray(product.allergens) && product.allergens.length > 0 && (
               <div className="flex items-start gap-2.5 bg-rose-50/60 p-3 rounded-xl border border-rose-200/80 text-xs text-rose-700">
                 <AlertTriangle className="w-4 h-4 text-rose-500 shrink-0 mt-0.5" />
                 <div>

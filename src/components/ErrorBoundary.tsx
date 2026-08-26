@@ -1,5 +1,5 @@
 import React, { Component, ErrorInfo, ReactNode } from 'react';
-import { AlertTriangle, RefreshCw, Trash2 } from 'lucide-react';
+import { AlertTriangle, RefreshCw, Trash2, ChevronDown, ChevronUp } from 'lucide-react';
 
 interface Props {
   children: ReactNode;
@@ -8,20 +8,25 @@ interface Props {
 interface State {
   hasError: boolean;
   error: Error | null;
+  errorInfo: ErrorInfo | null;
+  showDetails: boolean;
 }
 
 export class ErrorBoundary extends Component<Props, State> {
   public override state: State = {
     hasError: false,
     error: null,
+    errorInfo: null,
+    showDetails: false,
   };
 
-  public static getDerivedStateFromError(error: Error): State {
+  public static getDerivedStateFromError(error: Error): Partial<State> {
     return { hasError: true, error };
   }
 
   public override componentDidCatch(error: Error, errorInfo: ErrorInfo) {
     console.error('Uncaught error caught by ErrorBoundary:', error, errorInfo);
+    this.setState({ errorInfo });
   }
 
   private handleReload = () => {
@@ -30,13 +35,14 @@ export class ErrorBoundary extends Component<Props, State> {
 
   private handleResetStorage = () => {
     try {
-      localStorage.removeItem('geladinhos_cart_items');
-      localStorage.removeItem('geladinhos_cart_combos');
-      localStorage.removeItem('geladinhos_store_settings');
-      localStorage.removeItem('geladinhos_neighborhoods');
-      localStorage.removeItem('naturalis_catalog_version');
+      localStorage.clear();
+      sessionStorage.clear();
     } catch {}
-    window.location.reload();
+    window.location.href = window.location.pathname;
+  };
+
+  private toggleDetails = () => {
+    this.setState((prev) => ({ showDetails: !prev.showDetails }));
   };
 
   public override render() {
@@ -69,8 +75,29 @@ export class ErrorBoundary extends Component<Props, State> {
                 className="w-full py-3 px-4 bg-stone-100 hover:bg-stone-200 text-stone-700 rounded-xl font-semibold text-xs flex items-center justify-center gap-2 transition-colors cursor-pointer"
               >
                 <Trash2 className="w-4 h-4 text-stone-500" />
-                <span>Restaurar Sacola e Recarregar</span>
+                <span>Limpar Cache e Reiniciar App</span>
               </button>
+
+              {this.state.error && (
+                <div className="pt-2 text-left">
+                  <button
+                    onClick={this.toggleDetails}
+                    className="text-[11px] text-stone-400 hover:text-stone-600 flex items-center gap-1 mx-auto"
+                  >
+                    <span>Ver detalhes do erro</span>
+                    {this.state.showDetails ? <ChevronUp className="w-3 h-3" /> : <ChevronDown className="w-3 h-3" />}
+                  </button>
+
+                  {this.state.showDetails && (
+                    <div className="mt-2 p-3 bg-stone-900 text-red-400 font-mono text-[10px] rounded-lg overflow-x-auto max-h-40 break-all select-all">
+                      <p className="font-bold text-white mb-1">{this.state.error.name}: {this.state.error.message}</p>
+                      {this.state.error.stack && (
+                        <p className="text-stone-400 whitespace-pre-wrap">{this.state.error.stack}</p>
+                      )}
+                    </div>
+                  )}
+                </div>
+              )}
             </div>
           </div>
         </div>
