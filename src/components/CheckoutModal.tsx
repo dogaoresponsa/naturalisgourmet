@@ -87,6 +87,18 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({
   // Selected neighborhood fee
   const selectedNeighborhoodObj = activeNeighborhoods.find((n) => n.name === neighborhood) ||
     neighborhoods.find((n) => n.name === neighborhood);
+
+  // Compute lowest delivery fee among active neighborhoods
+  const lowestDeliveryFee = React.useMemo(() => {
+    if (activeNeighborhoods.length === 0) {
+      return storeSettings.standardDeliveryFee ?? 4.0;
+    }
+    const fees = activeNeighborhoods
+      .map((n) => n.fee)
+      .filter((f) => typeof f === 'number' && !isNaN(f));
+    return fees.length > 0 ? Math.min(...fees) : (storeSettings.standardDeliveryFee ?? 4.0);
+  }, [activeNeighborhoods, storeSettings.standardDeliveryFee]);
+
   const rawDeliveryFee = deliveryType === 'delivery' ? (selectedNeighborhoodObj ? selectedNeighborhoodObj.fee : storeSettings.standardDeliveryFee) : 0;
   const deliveryFee = isFreeDelivery || deliveryType === 'retirada' ? 0 : rawDeliveryFee;
 
@@ -118,6 +130,10 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({
       }
       if (!neighborhood.trim()) {
         setErrorMessage('Por favor, selecione ou informe o seu Bairro.');
+        return;
+      }
+      if (selectedNeighborhoodObj?.minOrderValue && subtotal < selectedNeighborhoodObj.minOrderValue) {
+        setErrorMessage(`O pedido mínimo para o bairro "${selectedNeighborhoodObj.name}" é de ${formatCurrency(selectedNeighborhoodObj.minOrderValue)}.`);
         return;
       }
     }
@@ -232,7 +248,11 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({
                 <div>
                   <p className="font-bold text-xs sm:text-sm text-stone-900">Entrega Delivery</p>
                   <p className="text-[11px] text-stone-500 font-medium">
-                    {isFreeDelivery ? '🎉 Frete Grátis!' : `A partir de ${formatCurrency(5.00)}`}
+                    {isFreeDelivery
+                      ? '🎉 Frete Grátis!'
+                      : lowestDeliveryFee === 0
+                      ? 'Grátis'
+                      : `A partir de ${formatCurrency(lowestDeliveryFee)}`}
                   </p>
                 </div>
               </button>

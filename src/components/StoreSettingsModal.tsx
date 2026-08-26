@@ -21,7 +21,7 @@ export const StoreSettingsModal: React.FC<StoreSettingsModalProps> = ({
   onLogoutAdmin,
 }) => {
   const [formData, setFormData] = useState<StoreSettings>(settings);
-  const [standardFeeStr, setStandardFeeStr] = useState(String(settings.standardDeliveryFee ?? 6.0));
+  const [standardFeeStr, setStandardFeeStr] = useState(String(settings.standardDeliveryFee ?? 4.0));
   const [minOrderStr, setMinOrderStr] = useState(String(settings.minOrderValue ?? 15.0));
   const [freeThresholdStr, setFreeThresholdStr] = useState(String(settings.freeDeliveryThreshold ?? 70.0));
   const [savedSuccess, setSavedSuccess] = useState(false);
@@ -30,7 +30,7 @@ export const StoreSettingsModal: React.FC<StoreSettingsModalProps> = ({
   useEffect(() => {
     if (isOpen) {
       setFormData(settings);
-      setStandardFeeStr(String(settings.standardDeliveryFee ?? 6.0));
+      setStandardFeeStr(String(settings.standardDeliveryFee ?? 4.0));
       setMinOrderStr(String(settings.minOrderValue ?? 15.0));
       setFreeThresholdStr(String(settings.freeDeliveryThreshold ?? 70.0));
     }
