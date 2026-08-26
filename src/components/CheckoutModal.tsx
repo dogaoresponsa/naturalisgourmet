@@ -35,15 +35,15 @@ interface CheckoutModalProps {
 export const CheckoutModal: React.FC<CheckoutModalProps> = ({
   isOpen,
   onClose,
-  items,
-  combos,
+  items = [],
+  combos = [],
   storeSettings,
   neighborhoods = NEIGHBORHOODS_DATA,
   onOrderCompleted,
 }) => {
   const activeNeighborhoods = React.useMemo(() => {
-    const list = (neighborhoods && neighborhoods.length > 0 ? neighborhoods : NEIGHBORHOODS_DATA)
-      .filter((n) => n.isActive !== false);
+    const rawList = Array.isArray(neighborhoods) && neighborhoods.length > 0 ? neighborhoods : NEIGHBORHOODS_DATA;
+    const list = rawList.filter((n) => n && typeof n.name === 'string' && n.isActive !== false);
     return list.length > 0 ? list : NEIGHBORHOODS_DATA;
   }, [neighborhoods]);
 
@@ -55,7 +55,7 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({
   const [neighborhood, setNeighborhood] = useState(() => activeNeighborhoods[0]?.name || 'Centro');
   const [complement, setComplement] = useState('');
   const [reference, setReference] = useState('');
-  const [city, setCity] = useState(storeSettings.city);
+  const [city, setCity] = useState(storeSettings?.city || 'Olímpia - SP');
   
   const [deliveryOption, setDeliveryOption] = useState<'agora' | 'agendado'>('agora');
   const [scheduledDate, setScheduledDate] = useState('');
@@ -75,39 +75,64 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({
     }
   }, [activeNeighborhoods, neighborhood]);
 
+  // Keep city in sync with storeSettings
+  React.useEffect(() => {
+    if (storeSettings?.city) {
+      setCity(storeSettings.city);
+    }
+  }, [storeSettings?.city]);
+
   if (!isOpen) return null;
 
-  // Calculate values
-  const itemsSubtotal = items.reduce((acc, i) => acc + i.product.price * i.quantity, 0);
-  const combosSubtotal = combos.reduce((acc, c) => acc + c.combo.price * c.quantity, 0);
-  const subtotal = itemsSubtotal + combosSubtotal;
+  // Calculate values safely
+  const validItems = (items || []).filter((i) => i && i.product);
+  const validCombos = (combos || []).filter((c) => c && c.combo);
 
-  const isFreeDelivery = subtotal >= storeSettings.freeDeliveryThreshold;
+  const itemsSubtotal = validItems.reduce((acc, i) => {
+    const price = typeof i.product?.price === 'number' ? i.product.price : 0;
+    const qty = typeof i.quantity === 'number' ? i.quantity : 1;
+    return acc + (price * qty);
+  }, 0);
+
+  const combosSubtotal = validCombos.reduce((acc, c) => {
+    const price = typeof c.combo?.price === 'number' ? c.combo.price : 0;
+    const qty = typeof c.quantity === 'number' ? c.quantity : 1;
+    return acc + (price * qty);
+  }, 0);
+
+  const subtotal = itemsSubtotal + combosSubtotal;
+  const freeThreshold = storeSettings?.freeDeliveryThreshold ?? 70;
+  const isFreeDelivery = subtotal >= freeThreshold;
 
   // Selected neighborhood fee
   const selectedNeighborhoodObj = activeNeighborhoods.find((n) => n.name === neighborhood) ||
-    neighborhoods.find((n) => n.name === neighborhood);
+    (Array.isArray(neighborhoods) ? neighborhoods.find((n) => n && n.name === neighborhood) : undefined) ||
+    activeNeighborhoods[0];
 
   // Compute lowest delivery fee among active neighborhoods
   const lowestDeliveryFee = React.useMemo(() => {
-    if (activeNeighborhoods.length === 0) {
-      return storeSettings.standardDeliveryFee ?? 4.0;
+    if (!activeNeighborhoods || activeNeighborhoods.length === 0) {
+      return storeSettings?.standardDeliveryFee ?? 4.0;
     }
     const fees = activeNeighborhoods
-      .map((n) => n.fee)
-      .filter((f) => typeof f === 'number' && !isNaN(f));
-    return fees.length > 0 ? Math.min(...fees) : (storeSettings.standardDeliveryFee ?? 4.0);
-  }, [activeNeighborhoods, storeSettings.standardDeliveryFee]);
+      .filter((n) => n && typeof n.fee === 'number' && !isNaN(n.fee))
+      .map((n) => n.fee);
+    return fees.length > 0 ? Math.min(...fees) : (storeSettings?.standardDeliveryFee ?? 4.0);
+  }, [activeNeighborhoods, storeSettings?.standardDeliveryFee]);
 
-  const rawDeliveryFee = deliveryType === 'delivery' ? (selectedNeighborhoodObj ? selectedNeighborhoodObj.fee : storeSettings.standardDeliveryFee) : 0;
+  const rawDeliveryFee = deliveryType === 'delivery'
+    ? (selectedNeighborhoodObj && typeof selectedNeighborhoodObj.fee === 'number' ? selectedNeighborhoodObj.fee : (storeSettings?.standardDeliveryFee ?? 4.0))
+    : 0;
   const deliveryFee = isFreeDelivery || deliveryType === 'retirada' ? 0 : rawDeliveryFee;
 
   const total = subtotal + deliveryFee;
 
   const handleCopyPix = () => {
-    navigator.clipboard.writeText(storeSettings.pixKey);
-    setCopiedPix(true);
-    setTimeout(() => setCopiedPix(false), 2000);
+    if (storeSettings?.pixKey && navigator.clipboard) {
+      navigator.clipboard.writeText(storeSettings.pixKey);
+      setCopiedPix(true);
+      setTimeout(() => setCopiedPix(false), 2000);
+    }
   };
 
   const handleFinishOrder = () => {
@@ -176,14 +201,18 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({
     };
 
     const formattedMessage = generateWhatsAppMessage(summaryData);
-    const whatsappUrl = buildWhatsAppUrl(storeSettings.whatsappNumber, formattedMessage);
+    const whatsappUrl = buildWhatsAppUrl(storeSettings?.whatsappNumber || '5517999999999', formattedMessage);
 
     // Fire celebratory confetti!
-    confetti({
-      particleCount: 80,
-      spread: 70,
-      origin: { y: 0.6 }
-    });
+    try {
+      if (typeof confetti === 'function') {
+        confetti({
+          particleCount: 80,
+          spread: 70,
+          origin: { y: 0.6 }
+        });
+      }
+    } catch {}
 
     onOrderCompleted(summaryData, whatsappUrl, formattedMessage);
   };

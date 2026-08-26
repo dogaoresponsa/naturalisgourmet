@@ -177,7 +177,10 @@ export default function App() {
   const [cartItems, setCartItems] = useState<CartItem[]>(() => {
     try {
       const saved = localStorage.getItem('geladinhos_cart_items');
-      return saved ? JSON.parse(saved) : [];
+      if (!saved) return [];
+      const parsed = JSON.parse(saved);
+      if (!Array.isArray(parsed)) return [];
+      return parsed.filter((i) => i && i.product && typeof i.product.price === 'number' && i.quantity > 0);
     } catch {
       return [];
     }
@@ -186,7 +189,10 @@ export default function App() {
   const [cartCombos, setCartCombos] = useState<CartComboItem[]>(() => {
     try {
       const saved = localStorage.getItem('geladinhos_cart_combos');
-      return saved ? JSON.parse(saved) : [];
+      if (!saved) return [];
+      const parsed = JSON.parse(saved);
+      if (!Array.isArray(parsed)) return [];
+      return parsed.filter((c) => c && c.combo && typeof c.combo.price === 'number' && c.quantity > 0);
     } catch {
       return [];
     }
@@ -475,14 +481,22 @@ export default function App() {
 
   // Cart calculations
   const totalCartCount = useMemo(() => {
-    const itemsCount = cartItems.reduce((acc, item) => acc + item.quantity, 0);
-    const combosCount = cartCombos.reduce((acc, c) => acc + c.combo.itemsCount * c.quantity, 0);
+    const itemsCount = (cartItems || []).reduce((acc, item) => acc + (item?.quantity || 0), 0);
+    const combosCount = (cartCombos || []).reduce((acc, c) => acc + ((c?.combo?.itemsCount || 0) * (c?.quantity || 0)), 0);
     return itemsCount + combosCount;
   }, [cartItems, cartCombos]);
 
   const totalCartValue = useMemo(() => {
-    const itemsTotal = cartItems.reduce((acc, item) => acc + item.product.price * item.quantity, 0);
-    const combosTotal = cartCombos.reduce((acc, c) => acc + c.combo.price * c.quantity, 0);
+    const itemsTotal = (cartItems || []).reduce((acc, item) => {
+      const price = item?.product?.price ?? 0;
+      const qty = item?.quantity ?? 0;
+      return acc + (price * qty);
+    }, 0);
+    const combosTotal = (cartCombos || []).reduce((acc, c) => {
+      const price = c?.combo?.price ?? 0;
+      const qty = c?.quantity ?? 0;
+      return acc + (price * qty);
+    }, 0);
     return itemsTotal + combosTotal;
   }, [cartItems, cartCombos]);
 

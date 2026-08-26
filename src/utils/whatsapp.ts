@@ -53,10 +53,13 @@ export function generateWhatsAppMessage(data: OrderSummaryData): string {
   text += `🛍️ *ITENS DO PEDIDO:*\n`;
 
   // List individual items
-  if (items.length > 0) {
+  if (items && items.length > 0) {
     items.forEach((item) => {
-      const itemTotal = item.product.price * item.quantity;
-      text += `▫️ *${item.quantity}x* ${item.product.name} (${formatCurrency(item.product.price)} un) = *${formatCurrency(itemTotal)}*\n`;
+      if (!item || !item.product) return;
+      const price = typeof item.product.price === 'number' ? item.product.price : 0;
+      const qty = typeof item.quantity === 'number' ? item.quantity : 1;
+      const itemTotal = price * qty;
+      text += `▫️ *${qty}x* ${item.product.name || 'Geladinho'} (${formatCurrency(price)} un) = *${formatCurrency(itemTotal)}*\n`;
       if (item.customNotes) {
         text += `   ↳ _Obs: ${item.customNotes}_\n`;
       }
@@ -64,14 +67,19 @@ export function generateWhatsAppMessage(data: OrderSummaryData): string {
   }
 
   // List combos
-  if (combos.length > 0) {
+  if (combos && combos.length > 0) {
     combos.forEach((comboItem) => {
-      const comboTotal = comboItem.combo.price * comboItem.quantity;
-      text += `🎁 *${comboItem.quantity}x COMBO: ${comboItem.combo.title}* = *${formatCurrency(comboTotal)}*\n`;
+      if (!comboItem || !comboItem.combo) return;
+      const price = typeof comboItem.combo.price === 'number' ? comboItem.combo.price : 0;
+      const qty = typeof comboItem.quantity === 'number' ? comboItem.quantity : 1;
+      const comboTotal = price * qty;
+      text += `🎁 *${qty}x COMBO: ${comboItem.combo.title || 'Kit'}* = *${formatCurrency(comboTotal)}*\n`;
       if (comboItem.selectedFlavors && comboItem.selectedFlavors.length > 0) {
         text += `   _Sabores do Kit:_\n`;
         comboItem.selectedFlavors.forEach(f => {
-          text += `   - ${f.quantity}x ${f.product.name}\n`;
+          if (f && f.product) {
+            text += `   - ${f.quantity || 1}x ${f.product.name}\n`;
+          }
         });
       }
       if (comboItem.combo.includesThermalBag) {

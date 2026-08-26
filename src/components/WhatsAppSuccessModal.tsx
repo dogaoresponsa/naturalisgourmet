@@ -30,19 +30,25 @@ export const WhatsAppSuccessModal: React.FC<WhatsAppSuccessModalProps> = ({
   if (!isOpen) return null;
 
   const handleCopyMessage = () => {
-    navigator.clipboard.writeText(rawMessage);
-    setCopiedMessage(true);
-    setTimeout(() => setCopiedMessage(false), 2000);
+    if (rawMessage && navigator.clipboard) {
+      navigator.clipboard.writeText(rawMessage);
+      setCopiedMessage(true);
+      setTimeout(() => setCopiedMessage(false), 2000);
+    }
   };
 
   const handleCopyPix = () => {
-    navigator.clipboard.writeText(storeSettings.pixKey);
-    setCopiedPix(true);
-    setTimeout(() => setCopiedPix(false), 2000);
+    if (storeSettings?.pixKey && navigator.clipboard) {
+      navigator.clipboard.writeText(storeSettings.pixKey);
+      setCopiedPix(true);
+      setTimeout(() => setCopiedPix(false), 2000);
+    }
   };
 
   const handleOpenWhatsApp = () => {
-    window.open(whatsappUrl, '_blank');
+    if (whatsappUrl) {
+      window.open(whatsappUrl, '_blank');
+    }
   };
 
   return (

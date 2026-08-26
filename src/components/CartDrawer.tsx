@@ -30,17 +30,33 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({
 }) => {
   if (!isOpen) return null;
 
-  const itemsTotal = items.reduce((acc, i) => acc + i.product.price * i.quantity, 0);
-  const combosTotal = combos.reduce((acc, c) => acc + c.combo.price * c.quantity, 0);
+  const validItems = (items || []).filter((i) => i && i.product);
+  const validCombos = (combos || []).filter((c) => c && c.combo);
+
+  const itemsTotal = validItems.reduce((acc, i) => {
+    const price = typeof i.product?.price === 'number' ? i.product.price : 0;
+    const qty = typeof i.quantity === 'number' ? i.quantity : 1;
+    return acc + (price * qty);
+  }, 0);
+
+  const combosTotal = validCombos.reduce((acc, c) => {
+    const price = typeof c.combo?.price === 'number' ? c.combo.price : 0;
+    const qty = typeof c.quantity === 'number' ? c.quantity : 1;
+    return acc + (price * qty);
+  }, 0);
+
   const subtotal = itemsTotal + combosTotal;
 
-  const totalUnits = items.reduce((acc, i) => acc + i.quantity, 0) + 
-    combos.reduce((acc, c) => acc + c.combo.itemsCount * c.quantity, 0);
+  const totalUnits = validItems.reduce((acc, i) => acc + (i.quantity || 0), 0) + 
+    validCombos.reduce((acc, c) => acc + ((c.combo?.itemsCount || 0) * (c.quantity || 0)), 0);
 
-  const missingForFreeDelivery = Math.max(0, storeSettings.freeDeliveryThreshold - subtotal);
-  const freeDeliveryProgress = Math.min(100, (subtotal / storeSettings.freeDeliveryThreshold) * 100);
+  const freeDeliveryThreshold = storeSettings?.freeDeliveryThreshold ?? 70;
+  const minOrderValue = storeSettings?.minOrderValue ?? 15;
 
-  const isMinOrderMet = subtotal >= storeSettings.minOrderValue;
+  const missingForFreeDelivery = Math.max(0, freeDeliveryThreshold - subtotal);
+  const freeDeliveryProgress = freeDeliveryThreshold > 0 ? Math.min(100, (subtotal / freeDeliveryThreshold) * 100) : 100;
+
+  const isMinOrderMet = subtotal >= minOrderValue;
 
   return (
     <div className="fixed inset-0 z-50 flex justify-end bg-stone-950/40 backdrop-blur-xs animate-in fade-in duration-200">
