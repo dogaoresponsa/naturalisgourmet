@@ -108,6 +108,9 @@ export default function App() {
         if (parsed.instagramHandle === '@deliciasgeladas.gourmet') {
           parsed.instagramHandle = '@naturalisgourmet';
         }
+        if (!isCatalogSynced && (!parsed.city || parsed.city.includes('São Paulo'))) {
+          parsed.city = 'Olímpia - SP';
+        }
         return { ...DEFAULT_STORE_SETTINGS, ...parsed };
       }
       return DEFAULT_STORE_SETTINGS;
@@ -126,6 +129,12 @@ export default function App() {
   });
 
   const [neighborhoods, setNeighborhoods] = useState<NeighborhoodFee[]>(() => {
+    if (!isCatalogSynced) {
+      try {
+        localStorage.setItem('geladinhos_neighborhoods', JSON.stringify(DEFAULT_NEIGHBORHOODS_DATA));
+      } catch {}
+      return DEFAULT_NEIGHBORHOODS_DATA;
+    }
     try {
       const saved = localStorage.getItem('geladinhos_neighborhoods');
       return saved ? JSON.parse(saved) : DEFAULT_NEIGHBORHOODS_DATA;
