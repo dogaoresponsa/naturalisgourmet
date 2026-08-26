@@ -47,6 +47,17 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({
     return list.length > 0 ? list : NEIGHBORHOODS_DATA;
   }, [neighborhoods]);
 
+  // Compute lowest delivery fee among active neighborhoods
+  const lowestDeliveryFee = React.useMemo(() => {
+    if (!activeNeighborhoods || activeNeighborhoods.length === 0) {
+      return storeSettings?.standardDeliveryFee ?? 4.0;
+    }
+    const fees = activeNeighborhoods
+      .filter((n) => n && typeof n.fee === 'number' && !isNaN(n.fee))
+      .map((n) => n.fee);
+    return fees.length > 0 ? Math.min(...fees) : (storeSettings?.standardDeliveryFee ?? 4.0);
+  }, [activeNeighborhoods, storeSettings?.standardDeliveryFee]);
+
   const [deliveryType, setDeliveryType] = useState<DeliveryType>('delivery');
   const [name, setName] = useState('');
   const [phone, setPhone] = useState('');
@@ -108,17 +119,6 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({
   const selectedNeighborhoodObj = activeNeighborhoods.find((n) => n.name === neighborhood) ||
     (Array.isArray(neighborhoods) ? neighborhoods.find((n) => n && n.name === neighborhood) : undefined) ||
     activeNeighborhoods[0];
-
-  // Compute lowest delivery fee among active neighborhoods
-  const lowestDeliveryFee = React.useMemo(() => {
-    if (!activeNeighborhoods || activeNeighborhoods.length === 0) {
-      return storeSettings?.standardDeliveryFee ?? 4.0;
-    }
-    const fees = activeNeighborhoods
-      .filter((n) => n && typeof n.fee === 'number' && !isNaN(n.fee))
-      .map((n) => n.fee);
-    return fees.length > 0 ? Math.min(...fees) : (storeSettings?.standardDeliveryFee ?? 4.0);
-  }, [activeNeighborhoods, storeSettings?.standardDeliveryFee]);
 
   const rawDeliveryFee = deliveryType === 'delivery'
     ? (selectedNeighborhoodObj && typeof selectedNeighborhoodObj.fee === 'number' ? selectedNeighborhoodObj.fee : (storeSettings?.standardDeliveryFee ?? 4.0))
