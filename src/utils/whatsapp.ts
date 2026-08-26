@@ -1,17 +1,19 @@
 import { CartItem, CartComboItem, CustomerDetails, StoreSettings, OrderRecord, OrderStatus, PaymentStatus } from '../types';
 
-export function formatCurrency(value: number): string {
+export function formatCurrency(value: number | undefined | null): string {
+  const num = typeof value === 'number' && !isNaN(value) ? value : 0;
   return new Intl.NumberFormat('pt-BR', {
     style: 'currency',
     currency: 'BRL'
-  }).format(value);
+  }).format(num);
 }
 
-export function cleanPhone(phone: string): string {
+export function cleanPhone(phone: string | undefined | null): string {
+  if (!phone || typeof phone !== 'string') return '';
   return phone.replace(/\D/g, '');
 }
 
-export function formatPhoneDisplay(phone: string): string {
+export function formatPhoneDisplay(phone: string | undefined | null): string {
   const digits = cleanPhone(phone);
   if (digits.length === 11) {
     return `(${digits.slice(0, 2)}) ${digits.slice(2, 7)}-${digits.slice(7)}`;
@@ -19,7 +21,7 @@ export function formatPhoneDisplay(phone: string): string {
   if (digits.length === 10) {
     return `(${digits.slice(0, 2)}) ${digits.slice(2, 6)}-${digits.slice(6)}`;
   }
-  return phone;
+  return phone || '';
 }
 
 export interface OrderSummaryData {

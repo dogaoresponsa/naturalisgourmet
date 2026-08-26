@@ -32,6 +32,9 @@ export class ErrorBoundary extends Component<Props, State> {
     try {
       localStorage.removeItem('geladinhos_cart_items');
       localStorage.removeItem('geladinhos_cart_combos');
+      localStorage.removeItem('geladinhos_store_settings');
+      localStorage.removeItem('geladinhos_neighborhoods');
+      localStorage.removeItem('naturalis_catalog_version');
     } catch {}
     window.location.reload();
   };

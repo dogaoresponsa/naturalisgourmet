@@ -307,7 +307,7 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({
 
             {deliveryType === 'retirada' && (
               <div className="mt-2.5 p-3 bg-stone-50 rounded-xl border border-stone-200 text-xs text-stone-700 font-medium">
-                📍 <strong>Local de Retirada:</strong> {storeSettings.address} ({storeSettings.city})
+                📍 <strong>Local de Retirada:</strong> {storeSettings?.address || 'Centro'} ({storeSettings?.city || 'Olímpia - SP'})
               </div>
             )}
           </div>
@@ -562,13 +562,13 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({
               <div className="p-3.5 bg-emerald-50/50 rounded-xl border border-emerald-200 flex items-center justify-between gap-3 text-xs">
                 <div>
                   <span className="text-stone-500 font-medium text-[11px] block">
-                    Chave PIX ({storeSettings.pixKeyType}):
+                    Chave PIX ({storeSettings?.pixKeyType || 'Celular'}):
                   </span>
                   <span className="font-mono font-bold text-emerald-800 select-all">
-                    {storeSettings.pixKey}
+                    {storeSettings?.pixKey || '11999998888'}
                   </span>
                   <span className="text-[10px] text-stone-500 block font-medium">
-                    Titular: {storeSettings.pixName}
+                    Titular: {storeSettings?.pixName || 'Naturalis Gourmet'}
                   </span>
                 </div>
 
