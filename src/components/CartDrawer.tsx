@@ -91,32 +91,46 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({
           </button>
         </div>
 
-        {/* Free Delivery Bar */}
-        <div className="p-4 bg-white border-b border-stone-200/80">
-          <div className="flex items-center justify-between text-xs mb-2 font-medium">
-            {missingForFreeDelivery > 0 ? (
-              <span className="text-stone-600 flex items-center gap-1">
-                <Sparkles className="w-3.5 h-3.5 text-amber-500" />
-                Faltam <strong className="text-stone-900">{formatCurrency(missingForFreeDelivery)}</strong> para Frete Grátis
-              </span>
-            ) : (
-              <span className="text-emerald-700 font-bold flex items-center gap-1">
-                <Sparkles className="w-3.5 h-3.5 text-emerald-600" />
-                Parabéns! Você ganhou <strong>ENTREGA GRÁTIS</strong>!
-              </span>
-            )}
-            <span className="text-stone-400 font-bold text-[11px]">{Math.round(freeDeliveryProgress)}%</span>
+        {/* Delivery / Free Delivery Bar */}
+        {storeSettings?.deliveryEnabled === false ? (
+          <div className="p-3.5 bg-amber-50/80 border-b border-amber-200/80">
+            <div className="flex items-center gap-2 text-xs text-amber-900 font-medium">
+              <span className="text-base">🏬</span>
+              <div>
+                <p className="font-bold text-amber-950">Atendimento Hoje: Retirada no Balcão</p>
+                <p className="text-[11px] text-amber-800">
+                  {storeSettings?.deliveryDisabledMessage || 'Entregas por delivery temporariamente pausadas. Venha retirar seu pedido fresquinho!'}
+                </p>
+              </div>
+            </div>
           </div>
+        ) : (
+          <div className="p-4 bg-white border-b border-stone-200/80">
+            <div className="flex items-center justify-between text-xs mb-2 font-medium">
+              {missingForFreeDelivery > 0 ? (
+                <span className="text-stone-600 flex items-center gap-1">
+                  <Sparkles className="w-3.5 h-3.5 text-amber-500" />
+                  Faltam <strong className="text-stone-900">{formatCurrency(missingForFreeDelivery)}</strong> para Frete Grátis
+                </span>
+              ) : (
+                <span className="text-emerald-700 font-bold flex items-center gap-1">
+                  <Sparkles className="w-3.5 h-3.5 text-emerald-600" />
+                  Parabéns! Você ganhou <strong>ENTREGA GRÁTIS</strong>!
+                </span>
+              )}
+              <span className="text-stone-400 font-bold text-[11px]">{Math.round(freeDeliveryProgress)}%</span>
+            </div>
 
-          <div className="w-full h-2 bg-stone-100 rounded-full overflow-hidden">
-            <div
-              className={`h-full transition-all duration-500 rounded-full ${
-                missingForFreeDelivery === 0 ? 'bg-emerald-500' : 'bg-rose-500'
-              }`}
-              style={{ width: `${freeDeliveryProgress}%` }}
-            />
+            <div className="w-full h-2 bg-stone-100 rounded-full overflow-hidden">
+              <div
+                className={`h-full transition-all duration-500 rounded-full ${
+                  missingForFreeDelivery === 0 ? 'bg-emerald-500' : 'bg-rose-500'
+                }`}
+                style={{ width: `${freeDeliveryProgress}%` }}
+              />
+            </div>
           </div>
-        </div>
+        )}
 
         {/* Items List */}
         <div className="flex-1 overflow-y-auto p-4 space-y-3">

@@ -58,7 +58,12 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({
     return fees.length > 0 ? Math.min(...fees) : (storeSettings?.standardDeliveryFee ?? 4.0);
   }, [activeNeighborhoods, storeSettings?.standardDeliveryFee]);
 
-  const [deliveryType, setDeliveryType] = useState<DeliveryType>('delivery');
+  // Check if delivery is enabled in store settings
+  const isDeliveryEnabled = storeSettings?.deliveryEnabled !== false;
+
+  const [deliveryType, setDeliveryType] = useState<DeliveryType>(() => (
+    storeSettings?.deliveryEnabled === false ? 'retirada' : 'delivery'
+  ));
   const [name, setName] = useState('');
   const [phone, setPhone] = useState('');
   const [street, setStreet] = useState('');
@@ -78,6 +83,13 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({
 
   const [copiedPix, setCopiedPix] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
+
+  // Enforce pickup if delivery is turned off in store settings
+  React.useEffect(() => {
+    if (!isDeliveryEnabled && deliveryType === 'delivery') {
+      setDeliveryType('retirada');
+    }
+  }, [isDeliveryEnabled, deliveryType]);
 
   // Keep neighborhood selected in sync if activeNeighborhoods change
   React.useEffect(() => {
@@ -262,6 +274,19 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({
             </div>
           )}
 
+          {/* Delivery Paused Banner if delivery is disabled */}
+          {!isDeliveryEnabled && (
+            <div className="p-3.5 bg-amber-50 border border-amber-200 rounded-2xl flex items-start gap-2.5 text-xs text-amber-900 animate-in fade-in">
+              <AlertCircle className="w-4 h-4 text-amber-600 shrink-0 mt-0.5" />
+              <div className="space-y-0.5">
+                <p className="font-bold text-amber-950">Apenas Retirada no Balcão</p>
+                <p className="text-amber-800 text-[11px] leading-relaxed">
+                  {storeSettings?.deliveryDisabledMessage || 'No momento as entregas por delivery estão temporariamente pausadas. Seu pedido será embalado para retirada rápida em nosso balcão!'}
+                </p>
+              </div>
+            </div>
+          )}
+
           {/* 1. Delivery Type Switcher */}
           <div>
             <label className="text-xs font-bold text-stone-500 uppercase tracking-wider block mb-2">
@@ -270,20 +295,43 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({
             <div className="grid grid-cols-2 gap-3">
               <button
                 type="button"
-                onClick={() => setDeliveryType('delivery')}
-                className={`p-3.5 rounded-2xl border text-left transition-all cursor-pointer flex items-center gap-3 ${
-                  deliveryType === 'delivery'
-                    ? 'border-rose-500 bg-rose-50/50 text-stone-900 shadow-xs'
-                    : 'border-stone-200 hover:border-stone-300 text-stone-700 bg-white'
+                disabled={!isDeliveryEnabled}
+                onClick={() => {
+                  if (isDeliveryEnabled) {
+                    setDeliveryType('delivery');
+                  }
+                }}
+                className={`p-3.5 rounded-2xl border text-left transition-all flex items-center gap-3 ${
+                  !isDeliveryEnabled
+                    ? 'opacity-60 bg-stone-50 border-stone-200 cursor-not-allowed text-stone-400'
+                    : deliveryType === 'delivery'
+                    ? 'border-rose-500 bg-rose-50/50 text-stone-900 shadow-xs cursor-pointer'
+                    : 'border-stone-200 hover:border-stone-300 text-stone-700 bg-white cursor-pointer'
                 }`}
+                title={!isDeliveryEnabled ? 'Entrega por delivery temporariamente desativada' : 'Receber em casa'}
               >
-                <div className={`p-2 rounded-xl ${deliveryType === 'delivery' ? 'bg-rose-500 text-white' : 'bg-stone-100 text-stone-600'}`}>
+                <div className={`p-2 rounded-xl ${
+                  !isDeliveryEnabled
+                    ? 'bg-stone-200 text-stone-500'
+                    : deliveryType === 'delivery'
+                    ? 'bg-rose-500 text-white'
+                    : 'bg-stone-100 text-stone-600'
+                }`}>
                   <MapPin className="w-5 h-5" />
                 </div>
                 <div>
-                  <p className="font-bold text-xs sm:text-sm text-stone-900">Entrega Delivery</p>
+                  <div className="flex items-center gap-1.5">
+                    <p className="font-bold text-xs sm:text-sm text-stone-900">Entrega Delivery</p>
+                    {!isDeliveryEnabled && (
+                      <span className="text-[9px] font-bold px-1.5 py-0.2 rounded bg-amber-100 text-amber-800 border border-amber-200">
+                        Pausado
+                      </span>
+                    )}
+                  </div>
                   <p className="text-[11px] text-stone-500 font-medium">
-                    {isFreeDelivery
+                    {!isDeliveryEnabled
+                      ? 'Indisponível hoje'
+                      : isFreeDelivery
                       ? '🎉 Frete Grátis!'
                       : lowestDeliveryFee === 0
                       ? 'Grátis'
@@ -297,7 +345,7 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({
                 onClick={() => setDeliveryType('retirada')}
                 className={`p-3.5 rounded-2xl border text-left transition-all cursor-pointer flex items-center gap-3 ${
                   deliveryType === 'retirada'
-                    ? 'border-rose-500 bg-rose-50/50 text-stone-900 shadow-xs'
+                    ? 'border-rose-500 bg-rose-50/50 text-stone-900 shadow-xs ring-1 ring-rose-500/20'
                     : 'border-stone-200 hover:border-stone-300 text-stone-700 bg-white'
                 }`}
               >
@@ -305,15 +353,23 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({
                   <Building2 className="w-5 h-5" />
                 </div>
                 <div>
-                  <p className="font-bold text-xs sm:text-sm text-stone-900">Retirada no Balcão</p>
+                  <div className="flex items-center gap-1.5">
+                    <p className="font-bold text-xs sm:text-sm text-stone-900">Retirada no Balcão</p>
+                    {!isDeliveryEnabled && (
+                      <span className="text-[9px] font-bold px-1.5 py-0.2 rounded bg-emerald-100 text-emerald-800 border border-emerald-200">
+                        Ativo
+                      </span>
+                    )}
+                  </div>
                   <p className="text-[11px] text-emerald-600 font-semibold">Grátis • Sem taxa</p>
                 </div>
               </button>
             </div>
 
             {deliveryType === 'retirada' && (
-              <div className="mt-2.5 p-3 bg-stone-50 rounded-xl border border-stone-200 text-xs text-stone-700 font-medium">
-                📍 <strong>Local de Retirada:</strong> {storeSettings?.address || 'Centro'} ({storeSettings?.city || 'Olímpia - SP'})
+              <div className="mt-2.5 p-3 bg-stone-50 rounded-xl border border-stone-200 text-xs text-stone-700 font-medium flex items-center gap-2">
+                <span className="shrink-0">📍</span>
+                <span><strong>Local de Retirada:</strong> {storeSettings?.address || 'Centro'} ({storeSettings?.city || 'Olímpia - SP'})</span>
               </div>
             )}
           </div>

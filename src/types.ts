@@ -122,6 +122,9 @@ export interface StoreSettings {
   isOpen: boolean;
   openingHoursText: string;
   standardDeliveryFee: number;
+  deliveryEnabled?: boolean; // Whether home delivery service is currently active
+  deliveryDisabledMessage?: string; // Message shown when delivery is disabled
+  pickupEnabled?: boolean; // Whether store pickup is available (default true)
   // Thermal receipt settings
   thermalCnpjCpf?: string;
   thermalCustomFooter?: string;

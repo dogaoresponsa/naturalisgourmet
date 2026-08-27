@@ -7,7 +7,8 @@ import {
   Printer, 
   LogOut,
   Sparkles,
-  MapPin
+  MapPin,
+  Truck
 } from 'lucide-react';
 import { StoreSettings } from '../types';
 
@@ -19,6 +20,7 @@ interface AdminBarProps {
   onOpenNeighborhoods: () => void;
   onOpenSettings: () => void;
   onOpenThermal: () => void;
+  onToggleDelivery?: () => void;
   onLogout: () => void;
 }
 
@@ -30,8 +32,11 @@ export const AdminBar: React.FC<AdminBarProps> = ({
   onOpenNeighborhoods,
   onOpenSettings,
   onOpenThermal,
+  onToggleDelivery,
   onLogout,
 }) => {
+  const isDeliveryActive = storeSettings.deliveryEnabled !== false;
+
   return (
     <div className="bg-stone-900 text-stone-100 border-b border-stone-800 shadow-md sticky top-0 z-50 animate-in slide-in-from-top-2 duration-200">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-2 flex flex-wrap items-center justify-between gap-2 text-xs">
@@ -41,9 +46,23 @@ export const AdminBar: React.FC<AdminBarProps> = ({
             <Shield className="w-3.5 h-3.5 text-amber-400" />
             <span>PAINEL DO LOJISTA (ADMIN)</span>
           </div>
-          <span className="hidden md:inline text-stone-400 text-[11px]">
-            Modo administrativo exclusivo para gerência da loja
-          </span>
+          
+          {/* Quick Delivery Switch Button */}
+          {onToggleDelivery && (
+            <button
+              type="button"
+              onClick={onToggleDelivery}
+              className={`flex items-center gap-1.5 px-2.5 py-1 rounded-lg font-bold text-[11px] border transition-all cursor-pointer shadow-2xs ${
+                isDeliveryActive
+                  ? 'bg-emerald-500/20 text-emerald-300 border-emerald-500/40 hover:bg-emerald-500/30'
+                  : 'bg-rose-500/20 text-rose-300 border-rose-500/40 hover:bg-rose-500/30'
+              }`}
+              title={isDeliveryActive ? 'Clique para pausar entregas por delivery' : 'Clique para ativar entregas por delivery'}
+            >
+              <Truck className="w-3.5 h-3.5" />
+              <span>Delivery: {isDeliveryActive ? '🟢 ATIVO' : '⛔ PAUSADO'}</span>
+            </button>
+          )}
         </div>
 
         {/* Action Buttons */}

@@ -41,12 +41,25 @@ export const Header: React.FC<HeaderProps> = ({
       <div className="bg-stone-900 text-stone-200 text-xs font-medium py-1.5 px-4 border-b border-stone-800">
         <div className="max-w-7xl mx-auto flex flex-wrap items-center justify-between gap-2">
           <div className="flex items-center gap-2">
-            <span className="inline-flex items-center px-2 py-0.5 rounded-full bg-rose-500/20 text-rose-300 text-[10px] uppercase tracking-wider font-bold">
-              ✨ Destaque
-            </span>
-            <span className="text-stone-300 text-xs">
-              Entrega <strong>GRÁTIS</strong> para pedidos acima de <span className="text-white font-bold">{formatCurrency(storeSettings.freeDeliveryThreshold)}</span>
-            </span>
+            {storeSettings.deliveryEnabled === false ? (
+              <>
+                <span className="inline-flex items-center px-2 py-0.5 rounded-full bg-amber-500/20 text-amber-300 text-[10px] uppercase tracking-wider font-bold">
+                  🏬 Apenas Retirada
+                </span>
+                <span className="text-amber-200 text-xs font-medium">
+                  Entregas por delivery pausadas • <strong>Retiradas no balcão abertas!</strong>
+                </span>
+              </>
+            ) : (
+              <>
+                <span className="inline-flex items-center px-2 py-0.5 rounded-full bg-rose-500/20 text-rose-300 text-[10px] uppercase tracking-wider font-bold">
+                  ✨ Destaque
+                </span>
+                <span className="text-stone-300 text-xs">
+                  Entrega <strong>GRÁTIS</strong> para pedidos acima de <span className="text-white font-bold">{formatCurrency(storeSettings.freeDeliveryThreshold)}</span>
+                </span>
+              </>
+            )}
           </div>
           <div className="hidden md:flex items-center gap-4 text-stone-400 text-xs">
             <button
