@@ -21,14 +21,14 @@ export const Footer: React.FC<FooterProps> = ({
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8 mb-8 pb-8 border-b border-stone-800 text-xs">
           {/* Col 1: Brand */}
-          <div className="md:col-span-2 space-y-3">
-            <div className="flex items-center gap-3">
-              <NaturalisLogo size={52} className="drop-shadow-md" />
+          <div className="md:col-span-2 space-y-3.5">
+            <div className="flex items-center gap-4 sm:gap-5">
+              <NaturalisLogo className="w-20 h-20 sm:w-24 sm:h-24 md:w-28 md:h-28 drop-shadow-xl shrink-0" priority />
               <div>
-                <span className="font-extrabold text-2xl text-white tracking-tight font-serif block">
+                <span className="font-extrabold text-2xl sm:text-3xl text-white tracking-tight font-serif block">
                   {storeSettings.storeName}
                 </span>
-                <span className="text-[11px] font-semibold text-emerald-400 uppercase tracking-wider">
+                <span className="text-xs sm:text-sm font-semibold text-emerald-400 uppercase tracking-wider">
                   Geladinhos Artesanais Nobres
                 </span>
               </div>
