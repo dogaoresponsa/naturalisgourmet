@@ -74,13 +74,13 @@ export const Header: React.FC<HeaderProps> = ({
       </div>
 
       {/* Main Header navigation */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-2.5 sm:py-3.5 flex items-center justify-between gap-3 sm:gap-4">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3.5 sm:py-5 flex items-center justify-between gap-3 sm:gap-6">
         {/* Brand Logo & Name */}
-        <div className="flex items-center gap-3 sm:gap-4">
+        <div className="flex items-center gap-3.5 sm:gap-5">
           <div className="relative group cursor-pointer shrink-0 transition-transform hover:scale-105">
-            <NaturalisLogo className="w-14 h-14 sm:w-16 sm:h-16 md:w-20 md:h-20 drop-shadow-md" />
+            <NaturalisLogo className="w-22 h-22 sm:w-28 sm:h-28 md:w-36 md:h-36 lg:w-40 lg:h-40 drop-shadow-lg" priority />
             <div
-              className={`absolute bottom-0 right-0 w-3.5 h-3.5 sm:w-4 sm:h-4 ${
+              className={`absolute bottom-1 right-1 w-4.5 h-4.5 sm:w-5 sm:h-5 ${
                 storeSettings.isOpen ? 'bg-emerald-500' : 'bg-rose-500'
               } border-2 border-white rounded-full shadow-xs`}
               title={storeSettings.isOpen ? 'Loja Aberta para Pedidos' : 'Loja Temporariamente Fechada'}
